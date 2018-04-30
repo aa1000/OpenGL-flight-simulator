@@ -148,6 +148,8 @@
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +159,8 @@
     <ClInclude Include="GVector.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="RenderedObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

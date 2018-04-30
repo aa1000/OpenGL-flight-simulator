@@ -62,6 +62,25 @@ bool HeightMap::Load(char* FileName)
 	return __super::Load(FileName);
 }
 
+void HeightMap::CalculateNormal(const int& X, const int& Z)
+{
+	int x, y, z;
+	GVector A, B, C, D;
+	GVector Normal;
+
+	A = GetVertex(X, Z);
+	B = GetVertex(X, Z + StepSize);
+	C = GetVertex(X + StepSize, Z + StepSize);
+	D = GetVertex(X + StepSize, Z);
+	
+	Normal = (C - A) * (D - B);
+	Normal = Normal.GetUnitVector();
+	glNormal3f(Normal.x, Normal.y, Normal.z);
+
+
+
+}
+
 void HeightMap::CalculateNormals()
 {
 	HeightMapNormals = new GVector*[MapWidth];
@@ -86,25 +105,25 @@ void HeightMap::CalculateEdgeNormals()
 	HeightMapNormals[0][0] = Drawing::CalculateNormal(A, B, C);
 
 	// Top Left
-	A = GetVertex(0, MapHeight - 1);
-	B = GetVertex(1, MapHeight - 1);
-	C = GetVertex(0, MapHeight - 2);
+	A = GetVertex(0, MapHeight - StepSize);
+	B = GetVertex(StepSize, MapHeight - StepSize);
+	C = GetVertex(0, MapHeight - StepSize);
 
-	HeightMapNormals[0][MapHeight - 1] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[0][MapHeight - StepSize] = Drawing::CalculateNormal(A, B, C);
 
 	// Top Right
-	A = GetVertex(MapWidth - 1, MapHeight - 1);
-	B = GetVertex(MapWidth -2, MapHeight - 1);
-	C = GetVertex(MapWidth - 1, MapHeight - 2);
+	A = GetVertex(MapWidth - StepSize, MapHeight - StepSize);
+	B = GetVertex(MapWidth - StepSize -1 , MapHeight - StepSize);
+	C = GetVertex(MapWidth - StepSize, MapHeight - StepSize);
 
-	HeightMapNormals[MapHeight - 1][MapWidth - 1] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[MapHeight - StepSize][MapWidth - StepSize] = Drawing::CalculateNormal(A, B, C);
 
 	// Bottom Left
-	A = GetVertex(MapWidth - 1, 0);
-	B = GetVertex(MapWidth - 2, 0);
-	C = GetVertex(MapWidth - 1, 1);
+	A = GetVertex(MapWidth - StepSize, 0);
+	B = GetVertex(MapWidth - StepSize -1 , 0);
+	C = GetVertex(MapWidth - StepSize, StepSize);
 
-	HeightMapNormals[MapWidth -1 ][0] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[MapWidth - StepSize ][0] = Drawing::CalculateNormal(A, B, C);
 }
 
 void HeightMap::Calculate3EdgeNormals()
@@ -116,16 +135,16 @@ void HeightMap::Calculate3EdgeNormals()
 	int X, Z;
 	// Bottom Row
 	Z = 0;
-	for (X = 1; X < MapWidth-1 ; X++)
+	for (X = StepSize; X < MapWidth-StepSize ; X+= StepSize)
 	{
 		// Centre Point
 		CP = GetVertex(X, Z);
 		// Right Point
-		RP = GetVertex(X - 1, Z);
+		RP = GetVertex(X - StepSize, Z);
 		// Left Point
-		LP = GetVertex(X + 1, Z);
+		LP = GetVertex(X + StepSize, Z);
 		// Z Point
-		OP = GetVertex(X, Z +1);
+		OP = GetVertex(X, Z + StepSize);
 
 		// Right Out Normal
 		RON = Drawing::CalculateNormal(CP, RP, OP);
@@ -137,8 +156,8 @@ void HeightMap::Calculate3EdgeNormals()
 	}
 
 	// Top Row
-	Z = MapHeight - 1;
-	for (X = 1; X < MapWidth - 1; X++)
+	Z = MapHeight - StepSize;
+	for (X = StepSize; X < MapWidth - StepSize; X+= StepSize)
 	{
 		// Centre Point
 		CP = GetVertex(X, Z);
@@ -160,16 +179,16 @@ void HeightMap::Calculate3EdgeNormals()
 
 	// Left Coloumn
 	X = 0;
-	for (Z = 1; Z < MapHeight - 1; Z++)
+	for (Z = StepSize; Z < MapHeight - StepSize; Z+= StepSize)
 	{
 		// Centre Point
 		CP = GetVertex(X, Z);
 		// Right Point
-		RP = GetVertex(X, Z - 1);
+		RP = GetVertex(X, Z - StepSize);
 		// Left Point
-		LP = GetVertex(X, Z + 1);
+		LP = GetVertex(X, Z + StepSize);
 		// Out Point
-		OP = GetVertex(X + 1, Z);
+		OP = GetVertex(X + StepSize, Z);
 
 		// Right Out Normal
 		RON = Drawing::CalculateNormal(CP, RP, OP);
@@ -181,17 +200,17 @@ void HeightMap::Calculate3EdgeNormals()
 	}
 
 	// Right Coloumn
-	X = MapWidth - 1;
-	for (Z = 1; Z < MapHeight - 1; Z++)
+	X = MapWidth - StepSize - 1;
+	for (Z = StepSize; Z < MapHeight - StepSize; Z+= StepSize)
 	{
 		// Centre Point
 		CP = GetVertex(X, Z);
 		// Right Point
-		RP = GetVertex(X, Z + 1);
+		RP = GetVertex(X, Z + StepSize);
 		// Left Point
-		LP = GetVertex(X, Z - 1);
+		LP = GetVertex(X, Z - StepSize);
 		// Out Point
-		OP = GetVertex(X - 1, Z);
+		OP = GetVertex(X - StepSize, Z);
 
 		// Right Out Normal
 		RON = Drawing::CalculateNormal(CP, RP, OP);
@@ -208,20 +227,20 @@ void HeightMap::Calculate4EdgeNormals()
 	GVector CP, TP, RP, BP, LP;
 	GVector TRN, RBN, BLN, LTN;
 	GVector Normal;
-	for (int X = 1; X < MapWidth - 1; X++)
+	for (int X = StepSize; X < MapWidth - StepSize; X+=StepSize)
 	{
-		for (int Z = 1; Z < MapHeight - 1; Z++)
+		for (int Z = StepSize; Z < MapHeight - StepSize; Z+= StepSize)
 		{
 			// Centre Point
 			CP = GetVertex(X, Z);
 			// Top Point
-			TP = GetVertex(X, Z + 1);
+			TP = GetVertex(X, Z + StepSize );
 			// Right Point
-			RP = GetVertex(X + 1, Z);
+			RP = GetVertex(X + StepSize , Z);
 			// Bottom Point
-			BP = GetVertex(X, Z - 1);
+			BP = GetVertex(X, Z - StepSize );
 			// Left Point
-			LP = GetVertex(X - 1, Z);
+			LP = GetVertex(X - StepSize , Z);
 
 			// Top Right Normal
 			TRN = Drawing::CalculateNormal(CP, TP, RP);
@@ -242,6 +261,7 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 {
 	int x, y, z;
 	GVector Normal;
+	//CalculateNormal(X, Z);
 	//Bottom left point
 	x = X;
 	z = Z;
@@ -281,6 +301,8 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	glNormal3f(Normal.x, Normal.y, Normal.z);
 	
 	glVertex3f(x, y, z);
+
+	
 }
 
 void HeightMap::Build()

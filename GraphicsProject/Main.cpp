@@ -17,7 +17,7 @@ using namespace std;
 
 GLfloat AmbientLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 GLfloat DiffuseLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat LightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f };
+GLfloat LightPosition[] = { 0.0f, 500.0f, 2.0f, 1.0f };
 
 //CMD2MODEL model1;
 
@@ -115,6 +115,8 @@ void SpecialFunc(int k, int x, int y) // uss UTF
 float animationTimer = 0;
 void Draw()
 {
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(25/255.0, 50/255.0, 95/255.0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	
@@ -140,12 +142,25 @@ void InitWindow()
 
 void InitLighting()
 {
-	
+	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, AmbientLight);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHTING);
 }
 
 void InitFog()
 {
-	
+	GLfloat FogColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogfv(GL_FOG_COLOR, FogColor);
+	glFogf(GL_FOG_DENSITY, 0.45f);
+	glHint(GL_FOG_HINT, GL_NICEST);
+	glFogf(GL_FOG_START, 1.0f);
+	glFogf(GL_FOG_END, __SCENE_DEPTH__ / 6);
+
+	glEnable(GL_FOG);
 }
 
 void Init()
@@ -166,20 +181,32 @@ void Init()
 
 	//init
 	glEnable(GL_DEPTH_TEST);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, AmbientLight);
-	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHTING);
+	
 	glEnable(GL_TEXTURE_2D);
+	InitLighting();
+	InitFog();
+
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	glShadeModel(GL_SMOOTH);
+	glDepthFunc(GL_LEQUAL);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+
+	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	//glEnable(GL_POLYGON_SMOOTH);
+
+	//glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_ALPHA_TEST);
 }
 
 void LoadObjects()
 {
 	HeightMap* HM = new HeightMap(1);
-	HM->SetStepSize(1);
+	//HM->SetStepSize(1);
 	HM->Load("map2.jpg");
-	HM->SetScale(0.1);
+	HM->SetScale(0.8);
 	RenderedObjects.push_back(HM);
 
 	Mesh* Apple = new Mesh();
