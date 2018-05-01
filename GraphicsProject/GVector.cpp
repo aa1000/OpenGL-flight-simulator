@@ -61,6 +61,14 @@ GVector& GVector::operator=(const GVector& other)
 	return *this;
 }
 
+GVector& GVector::operator+=(const GVector& other)
+{
+	this->x += other.x;
+	this->y += other.y;
+	this->z += other.z;
+	return *this;
+}
+
 GVector GVector::operator+(const GVector& other)
 {
 	GVector out(x + other.x, y + other.y, z + other.z);

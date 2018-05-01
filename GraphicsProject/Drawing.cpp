@@ -32,5 +32,5 @@ GVector Drawing::CalculateNormal(GVector A, GVector B, GVector C)
 	GVector AB = B - A;
 
 	GVector Cross = AC*AB;
-	return Cross.GetUnitVector() * -3;
+	return Cross * -1;// .GetUnitVector() * -10;
 }

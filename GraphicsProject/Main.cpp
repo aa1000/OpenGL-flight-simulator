@@ -15,7 +15,7 @@
 
 using namespace std;
 
-GLfloat AmbientLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+GLfloat AmbientLight[] = { 0.8f, 0.8f, 0.8f, 0.8f };
 GLfloat DiffuseLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat LightPosition[] = { 0.0f, 500.0f, 2.0f, 1.0f };
 
@@ -184,7 +184,7 @@ void Init()
 	
 	glEnable(GL_TEXTURE_2D);
 	InitLighting();
-	InitFog();
+	//InitFog();
 
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

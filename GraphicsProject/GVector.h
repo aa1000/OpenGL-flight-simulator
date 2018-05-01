@@ -19,6 +19,8 @@ public:
 
 	GVector& operator=(const GVector& other); // copy assignment
 
+	GVector& operator+=(const GVector& other);
+
 	GVector operator+(const GVector& other);
 
 	GVector operator-(const GVector& other);

@@ -7,11 +7,23 @@ void PhysicsObject::AddPhysicsObject(PhysicsObject* PO)
 
 PhysicsObject::PhysicsObject()
 {
-	//PhysicsObject::AddPhysicsObject(this);
+	PhysicsObject::AddPhysicsObject(this);
+}
+
+PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)
+{
+	this->Location = Location;
+	this->Velocity = Velocity;
+}
+
+void PhysicsObject::Integrate(float DeltaTime)
+{
+	Location += Velocity * DeltaTime;
 }
 
 void PhysicsObject::SimulatePhysicsObject()
 {
+
 }
 
 void PhysicsObject::SimulateObjects()

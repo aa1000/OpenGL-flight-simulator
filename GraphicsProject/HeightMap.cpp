@@ -62,7 +62,7 @@ bool HeightMap::Load(char* FileName)
 	return __super::Load(FileName);
 }
 
-void HeightMap::CalculateNormal(const int& X, const int& Z)
+GVector HeightMap::CalculatePlaneNormal(const int& X, const int& Z)
 {
 	int x, y, z;
 	GVector A, B, C, D;
@@ -74,8 +74,8 @@ void HeightMap::CalculateNormal(const int& X, const int& Z)
 	D = GetVertex(X + StepSize, Z);
 	
 	Normal = (C - A) * (D - B);
-	Normal = Normal.GetUnitVector();
-	glNormal3f(Normal.x, Normal.y, Normal.z);
+	return Normal.GetUnitVector();
+	
 
 
 
@@ -261,12 +261,16 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 {
 	int x, y, z;
 	GVector Normal;
-	//CalculateNormal(X, Z);
+	//Normal = CalculatePlaneNormal(X, Z);
+	//glNormal3f(Normal.x, Normal.y, Normal.z);
+	
+	glColor3f(0, 0, 1);
+
 	//Bottom left point
 	x = X;
 	z = Z;
 	y = HeightMapBytes[x][z];
-	glColor3f(1, 0, 0);
+
 	Normal = HeightMapNormals[x][z];
 	glNormal3f(Normal.x, Normal.y, Normal.z);
 
@@ -286,7 +290,7 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	x = X + StepSize;
 	z = Z + StepSize;
 	y = HeightMapBytes[x][z];
-	glColor3f(1, 0, 0);
+	
 	Normal = HeightMapNormals[x][z];
 	glNormal3f(Normal.x, Normal.y, Normal.z);
 
@@ -296,7 +300,7 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	x = X + StepSize;
 	z = Z;
 	y = HeightMapBytes[x][z];
-	glColor3f(1, 0, 0);
+
 	Normal = HeightMapNormals[x][z];
 	glNormal3f(Normal.x, Normal.y, Normal.z);
 	

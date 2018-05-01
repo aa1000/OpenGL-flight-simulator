@@ -18,7 +18,7 @@ struct Particle
 
 };
 
-class ParticleSystem : RenderedObject
+class ParticleSystem : public RenderedObject
 {
 	vector<GLint> Textures;
 	int MaxParticles;

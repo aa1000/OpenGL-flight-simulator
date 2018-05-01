@@ -144,11 +144,13 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawing.cpp" />
+    <ClCompile Include="GObject.cpp" />
     <ClCompile Include="GVector.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
   </ItemGroup>
@@ -156,10 +158,12 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Drawing.h" />
+    <ClInclude Include="GObject.h" />
     <ClInclude Include="GVector.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="RenderedObject.h" />
   </ItemGroup>

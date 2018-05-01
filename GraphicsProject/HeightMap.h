@@ -10,7 +10,7 @@ class HeightMap : public RenderedObject
 	BYTE **HeightMapBytes;
 	GVector  **HeightMapNormals;
 
-	void CalculateNormal(const int & X, const int & Z);
+	GVector CalculatePlaneNormal(const int & X, const int & Z);
 	void CalculateNormals();
 	void CalculateEdgeNormals();
 	void Calculate3EdgeNormals();

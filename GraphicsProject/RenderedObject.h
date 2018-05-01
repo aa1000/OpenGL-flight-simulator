@@ -1,8 +1,9 @@
 ﻿#pragma once
 #include "GVector.h"
 #include "GL/freeglut.h"
+#include "GObject.h"
 
-class RenderedObject
+class RenderedObject : public GObject
 {
 public:
 	int glListIndex;
