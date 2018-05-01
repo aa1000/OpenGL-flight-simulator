@@ -8,11 +8,11 @@
 
 void PhysicsEngine::AddPhysicsObject(PhysicsObject* PhysicsObject)
 {
-	PhysicsObjects.push_back(PhysicsObject);
+	PhysicsEngine::PhysicsObjects.push_back(PhysicsObject);
 }
 
 void PhysicsEngine::Simulate(float DeltaTime)
 {
 	for (int i = 0; i < PhysicsObjects.size(); i++)
-		PhysicsObjects[i]->Integrate(DeltaTime);
+		PhysicsEngine::PhysicsObjects[i]->Integrate(DeltaTime);
 }

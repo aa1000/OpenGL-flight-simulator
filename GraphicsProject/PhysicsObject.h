@@ -10,6 +10,8 @@ class PhysicsObject : public GObject
 
 	GVector Location;
 	GVector Velocity;
+	
+	float Gravity;
 protected:
 
 	static void AddPhysicsObject(PhysicsObject* PO);

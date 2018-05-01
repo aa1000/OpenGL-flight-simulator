@@ -3,7 +3,7 @@
 #include <vector>
 
 using namespace std;
- class PhysicsEngine
+static class PhysicsEngine
 {
 	static vector<PhysicsObject*> PhysicsObjects;
 

@@ -8,6 +8,7 @@ void PhysicsObject::AddPhysicsObject(PhysicsObject* PO)
 PhysicsObject::PhysicsObject()
 {
 	PhysicsObject::AddPhysicsObject(this);
+	Gravity = 9.0;
 }
 
 PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)
@@ -18,6 +19,7 @@ PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)
 
 void PhysicsObject::Integrate(float DeltaTime)
 {
+	Velocity.y -= Gravity * DeltaTime;
 	Location += Velocity * DeltaTime;
 }
 
