@@ -3,16 +3,17 @@
 #include <vector>
 
 using namespace std;
-class PhysicsEngine
+ class PhysicsEngine
 {
-	vector<PhysicsObject*> PhysicsObjects;
+	static vector<PhysicsObject*> PhysicsObjects;
 
 public:
 
-	~PhysicsEngine();
+	//PhysicsEngine();
+	//~PhysicsEngine();
 
-	void AddPhysicsObject(PhysicsObject* PhysicsObject);
-	void Simulate(float DeltaTime);
+	static void AddPhysicsObject(PhysicsObject* PhysicsObject);
+	static void Simulate(float DeltaTime);
 
 	
 };
