@@ -6,18 +6,18 @@
 //		delete PhysicsObjects[i];
 //}
 
-vector<PhysicsObject*> PhysicsEngine:: PhysicsObjects;
+vector<PhysicsObjectComponent*> PhysicsEngine:: PhysicsObjectComponenets;
 float PhysicsEngine::Gravity = 9;
 
-void PhysicsEngine::AddPhysicsObject(PhysicsObject* PhysicsObject)
+void PhysicsEngine::AddPhysicsObject(PhysicsObjectComponent* PhysicsObjectComponent)
 {
-	PhysicsEngine::PhysicsObjects.push_back(PhysicsObject);
+	PhysicsEngine::PhysicsObjectComponenets.push_back(PhysicsObjectComponent);
 }
 
 void PhysicsEngine::Simulate(float DeltaTime)
 {
-	for (int i = 0; i < PhysicsObjects.size(); i++)
-		PhysicsEngine::PhysicsObjects[i]->Integrate(DeltaTime);
+	for (int i = 0; i < PhysicsObjectComponenets.size(); i++)
+		PhysicsEngine::PhysicsObjectComponenets[i]->Update(DeltaTime);
 }
 
 float PhysicsEngine::GetGravity()

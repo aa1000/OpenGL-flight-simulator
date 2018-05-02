@@ -18,7 +18,3 @@ void PhysicsObject::Integrate(float DeltaTime)
 	Location += Velocity * DeltaTime;
 }
 
-void PhysicsObject::SimulatePhysicsObject()
-{
-
-}

@@ -152,7 +152,10 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="PhysicsObjectComponent.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
+    <ClCompile Include="RenderedObjectComponent.cpp" />
+    <ClCompile Include="RenderingEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -165,7 +168,10 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsObject.h" />
+    <ClInclude Include="PhysicsObjectComponent.h" />
     <ClInclude Include="RenderedObject.h" />
+    <ClInclude Include="RenderedObjectComponent.h" />
+    <ClInclude Include="RenderingEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
