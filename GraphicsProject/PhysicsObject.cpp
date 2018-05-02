@@ -1,14 +1,9 @@
 ﻿#include "PhysicsObject.h"
-
-void PhysicsObject::AddPhysicsObject(PhysicsObject* PO)
-{
-	//PhysicsObject::PhysicsObjects.push_back(PO);
-}
+#include "PhysicsEngine.h"
 
 PhysicsObject::PhysicsObject()
 {
-	PhysicsObject::AddPhysicsObject(this);
-	Gravity = 9.0;
+	PhysicsEngine::AddPhysicsObject(this);
 }
 
 PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)
@@ -19,17 +14,11 @@ PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)
 
 void PhysicsObject::Integrate(float DeltaTime)
 {
-	Velocity.y -= Gravity * DeltaTime;
+	Velocity.y -= PhysicsEngine::GetGravity() * DeltaTime;
 	Location += Velocity * DeltaTime;
 }
 
 void PhysicsObject::SimulatePhysicsObject()
 {
 
-}
-
-void PhysicsObject::SimulateObjects()
-{
-//	for (int i = 0; i < PhysicsObjects.size(); i++)
-//		PhysicsObjects[i]->SimulatePhysicsObject();
 }

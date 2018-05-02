@@ -6,15 +6,12 @@
 using namespace std;
 class PhysicsObject : public GObject
 {
-	static vector<PhysicsObject*> PhysicsObjects;
 
 	GVector Location;
 	GVector Velocity;
 	
-	float Gravity;
-protected:
+	GVector Acceleration;
 
-	static void AddPhysicsObject(PhysicsObject* PO);
 public:
 	GObject* parent;
 	PhysicsObject();
@@ -22,6 +19,4 @@ public:
 	
 	void Integrate(float DeltaTime);
 
-	void SimulatePhysicsObject();
-	static void SimulateObjects();
 };

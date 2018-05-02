@@ -35,6 +35,7 @@ public:
 class GObject
 {
 	GObject* Parent;
+
 public:
 
 	GTransform Transform;
