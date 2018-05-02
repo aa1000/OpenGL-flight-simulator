@@ -86,6 +86,11 @@ float GVector::operator|(const GVector& other)
 	return x * other.x + y * other.y + z * other.z;
 }
 
+GVector GVector::operator*(const int& scalar)
+{
+	return GVector(x*scalar, y * scalar, z*scalar);
+}
+
 GVector GVector::operator*(const float& scalar)
 {
 	GVector	 out(x*scalar, y * scalar, z*scalar);

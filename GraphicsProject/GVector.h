@@ -27,6 +27,8 @@ public:
 
 	float operator|(const GVector& other); // dot product
 
+	GVector operator*(const int& scalar); 
+
 	GVector operator*(const float& scalar); // multi scalar
 
 	GVector operator/(const float& scalar); // div scalar

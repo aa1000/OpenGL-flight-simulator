@@ -23,6 +23,8 @@ GLuint Drawing::LoadTexture(char* filename, bool invert)
 	//texture type, texture quality (0 highest), image type, border width, image format, sign and size for bytes
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(fimg));
 
+	FreeImage_Unload(fimg);
+
 	return  Texture;
 }
 

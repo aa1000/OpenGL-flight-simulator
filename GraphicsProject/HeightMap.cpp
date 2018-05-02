@@ -58,6 +58,8 @@ bool HeightMap::Load(char* FileName)
 			HeightMapBytes[x][y] = ScanLine[x];
 	}
 
+	FreeImage_Unload(img);
+
 	CalculateNormals();
 	return __super::Load(FileName);
 }
