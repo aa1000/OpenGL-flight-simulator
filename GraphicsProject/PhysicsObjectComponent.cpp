@@ -4,15 +4,16 @@
 PhysicsObjectComponent::PhysicsObjectComponent()
 	:GObject()
 {
+	physicsObject = new PhysicsObject();
 	PhysicsEngine::AddPhysicsObject(this);
 }
 
 void PhysicsObjectComponent::Update(float DeltaTime)
 {
 	GTransform trans = GetTransform();
-	PhysicsObject.Integrate(DeltaTime);
-	trans.Location = this->Transform.Location;
-	trans.Rotation = this->Transform.Rotation;
+	physicsObject->Integrate(DeltaTime);
+	trans.Location = physicsObject->Location;
+	//trans.Rotation = physicsObject->Rotation;
 
 	GetParent()->SetTransform(trans);
 }

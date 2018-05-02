@@ -3,10 +3,12 @@
 
 class RenderedObjectComponent : public GObject
 {
-	RenderedObject renderedobject;
+	RenderedObject* renderedobject;
 public:
 
 	RenderedObjectComponent();
+	~RenderedObjectComponent();
+	void Load(char* FileName);
 	void Render();
 
 	

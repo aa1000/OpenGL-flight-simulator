@@ -5,7 +5,7 @@
 class PhysicsObjectComponent : public GObject
 {
 
-	PhysicsObject PhysicsObject;
+	PhysicsObject* physicsObject;
 public:
 
 	PhysicsObjectComponent();

@@ -30,7 +30,8 @@ Camera camera;
 
 void RenderTimer(int Dif)
 {
-	glutTimerFunc(33, RenderTimer, 33);
+	const int time = 1000 / __FPS__;
+	glutTimerFunc(time, RenderTimer, time);
 	glutPostRedisplay();
 }
 
@@ -38,8 +39,8 @@ void Resize(int width, int height)
 {
 	height = height > 0 ? height : 1;
 
-	float AR = width / height;
-
+	float AR = (float)width / height;
+	
 	glMatrixMode(GL_PROJECTION); //load projection matrix to change resolution and mapping, GL_MODELVIEW for the screen matrix
 	glLoadIdentity(); // to reset all rotation etc in memory
 
@@ -206,7 +207,7 @@ void LoadObjects()
 	HeightMap* HM = new HeightMap(1);
 	//HM->SetStepSize(1);
 	HM->Load("map2.jpg");
-	HM->SetScale(0.8);
+	HM->SetScale(0.9);
 	RenderedObjects.push_back(HM);
 
 	Mesh* Apple = new Mesh();

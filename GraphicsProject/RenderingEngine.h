@@ -18,6 +18,6 @@ public:
 
 	static void AddRenderedObject(RenderedObjectComponent* RenderedObject);
 	static void Render(float DeltaTime);
-
+	static int GetLastIndex();
 	
 };
