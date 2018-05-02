@@ -1,14 +1,14 @@
 ﻿#pragma once
-#include "RenderedObject.h"
+#include "RenderedObjectComponent.h"
 #include <vector>
+
 
 
 using namespace std;
 class RenderingEngine
 {
-	static std::vector<RenderedObject*> PhysicsObjects;
+	static vector<RenderedObjectComponent*> RenderedObjectsComponents;
 
-	static float Gravity;
 	RenderingEngine() {}
 
 public:
@@ -16,8 +16,8 @@ public:
 	//
 	//~PhysicsEngine();
 
-	static void AddRenderedObject(RenderedObject* RenderedObject);
-	static void Simulate(float DeltaTime);
+	static void AddRenderedObject(RenderedObjectComponent* RenderedObject);
+	static void Render(float DeltaTime);
 
 	
 };

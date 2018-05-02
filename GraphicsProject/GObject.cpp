@@ -14,3 +14,8 @@ void GObject::SetParent(GObject* Parent)
 {
 	this->Parent = Parent;
 }
+
+void GObject::SetTransform(const GTransform& NewTransform)
+{
+	this->Transform = NewTransform;
+}

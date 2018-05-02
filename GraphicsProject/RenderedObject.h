@@ -3,7 +3,7 @@
 #include "GL/freeglut.h"
 #include "GObject.h"
 
-class RenderedObject : public GObject
+class RenderedObject
 {
 public:
 	int glListIndex;

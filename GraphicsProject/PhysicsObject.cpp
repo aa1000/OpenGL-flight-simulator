@@ -3,7 +3,7 @@
 
 PhysicsObject::PhysicsObject()
 {
-	PhysicsEngine::AddPhysicsObject(this);
+	
 }
 
 PhysicsObject::PhysicsObject(GVector Location, GVector Velocity)

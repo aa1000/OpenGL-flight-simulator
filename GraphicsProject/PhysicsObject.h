@@ -4,7 +4,7 @@
 #include "GObject.h"
 
 using namespace std;
-class PhysicsObject : public GObject
+class PhysicsObject
 {
 
 	GVector Location;

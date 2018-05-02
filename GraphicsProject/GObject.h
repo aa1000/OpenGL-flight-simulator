@@ -29,6 +29,8 @@ public:
 		this->Location = Other.Location;
 		this->Rotation = Other.Rotation;
 		this->Scale = Other.Scale;
+
+		return *this;
 	}
 
 };
@@ -45,4 +47,8 @@ public:
 
 	void SetParent(GObject* Parent);
 	inline GObject* GetParent() const { return  Parent; }
+
+	inline GTransform GetTransform() { return Transform; }
+
+	void SetTransform(const GTransform & NewTransform);
 };
