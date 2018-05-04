@@ -7,7 +7,7 @@
 using namespace std;
 class RenderingEngine
 {
-	static vector<RenderedObjectComponent*> RenderedObjectsComponents;
+	static vector<RenderedObject*> RenderedObjects;
 
 	RenderingEngine() {}
 
@@ -16,8 +16,8 @@ public:
 	//
 	//~PhysicsEngine();
 
-	static void AddRenderedObject(RenderedObjectComponent* RenderedObject);
-	static void Render(float DeltaTime);
+	static void AddRenderedObject(RenderedObject* RenderedObject);
+	static void Render();
 	static int GetLastIndex();
 	
 };

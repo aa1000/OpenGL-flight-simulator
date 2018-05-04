@@ -1,25 +1,45 @@
 ﻿#include "RenderedObject.h"
+#include "RenderingEngine.h"
 
-RenderedObject::RenderedObject()
+void RenderedObject::Init()
 {
+	__super::Init();
 	glListIndex = -1;
-	Scale.init(1);
+	RenderingEngine::AddRenderedObject(this);
 }
 
-RenderedObject::RenderedObject(int glListIndex)
+RenderedObject::RenderedObject()
+	:GObject()
 {
-	this->glListIndex = glListIndex;
+	Init();
+}
+
+RenderedObject::RenderedObject(GObject* Parent)
+	:GObject(Parent)
+{
+	Init();
+}
+
+RenderedObject::RenderedObject(bool RenderInList)
+	:GObject()
+{
+	Init();
+	if(RenderInList)
+		this->glListIndex = RenderingEngine::GetLastIndex();
+}
+
+RenderedObject::RenderedObject(GObject* Parent, bool RenderInList)
+	:GObject(Parent)
+{
+	Init();
+	if (RenderInList)
+		this->glListIndex = RenderingEngine::GetLastIndex();
 }
 
 RenderedObject::~RenderedObject()
 {
 	if (glListIndex > -1)
 		glDeleteLists(glListIndex, 1);
-}
-
-void RenderedObject::SetScale(float NewScale)
-{
-	Scale.x = Scale.y = Scale.z = NewScale;
 }
 
 bool RenderedObject::Load(char* FileName)
@@ -30,6 +50,10 @@ bool RenderedObject::Load(char* FileName)
 
 void RenderedObject::ApplyTransforms()
 {
+	GVector Location = GetLocation();
+	GVector Rotation = GetRoation();
+	GVector Scale = GetScale();
+
 	glTranslatef(Location.x, Location.y, Location.z);
 	glRotatef(1.0f, Rotation.x, Rotation.y, Rotation.z);
 	glScalef(Scale.x, Scale.y, Scale.z);

@@ -3,20 +3,23 @@
 #include "GL/freeglut.h"
 #include "GObject.h"
 
-class RenderedObject
+class RenderedObject : public GObject
 {
-public:
 	int glListIndex;
 
-	GVector Location;
-	GVector Rotation;
-	GVector Scale;
+protected:
+	virtual void Init() override;
+public:
+	
+
 
 	RenderedObject();
-	RenderedObject(int glListIndex);
+	RenderedObject(GObject* Parent);
+	RenderedObject(bool RenderInList);
+	RenderedObject(GObject* Parent, bool RenderInList);
 	~RenderedObject();
 
-	void SetScale(float NewScale);
+	
 	virtual bool Load(char* FileName);
 	void ApplyTransforms();
 	virtual void Build();

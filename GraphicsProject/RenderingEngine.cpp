@@ -1,15 +1,21 @@
 ﻿#include "RenderingEngine.h"
 
 
-vector<RenderedObjectComponent*> RenderingEngine::RenderedObjectsComponents;
+vector<RenderedObject*> RenderingEngine::RenderedObjects;
 
 
-void RenderingEngine::AddRenderedObject(RenderedObjectComponent* RenderedObject)
+void RenderingEngine::AddRenderedObject(RenderedObject* RenderedObject)
 {
-	RenderedObjectsComponents.push_back(RenderedObject);
+	RenderedObjects.push_back(RenderedObject);
+}
+
+void RenderingEngine::Render()
+{
+	for (int i = 0; i < RenderedObjects.size(); i++)
+		RenderedObjects[i]->Render();
 }
 
 int RenderingEngine::GetLastIndex()
 {
-	return  RenderedObjectsComponents.size();
+	return  RenderedObjects.size();
 }

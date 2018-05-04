@@ -18,10 +18,6 @@ HeightMap::HeightMap(int glListIndex)
 	StepSize = 4;
 }
 
-//HeightMap::HeightMap(int glListIndex)
-//	:RenderedObject(glListIndex)
-//{
-//}
 
 HeightMap::~HeightMap()
 {

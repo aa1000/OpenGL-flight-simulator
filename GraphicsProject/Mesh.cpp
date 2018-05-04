@@ -5,13 +5,17 @@
 Mesh::Mesh()
 	:RenderedObject()
 {
-	//glListIndex = -1;
 }
 
 Mesh::Mesh(int glListIndex)
 	:RenderedObject(glListIndex)
 {
-	this->glListIndex = glListIndex;
+}
+
+Mesh::~Mesh()
+{
+	for (int i = 0; i < texs.size(); i++)
+		glDeleteTextures(1, &texs[i]);
 }
 
 bool Mesh::Load(char* FileName)

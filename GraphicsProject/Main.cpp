@@ -1,15 +1,18 @@
 
+#include "Definitions.h"
 #include <GL/freeglut.h>
 #include <FreeImage.h>
 #include <Math.h>
 #include <iostream>
 #include <vector>
 #include "GVector.h"
-#include "RenderedObject.h"
 #include "Mesh.h"
-#include "Definitions.h"
+
 #include "Camera.h"
 #include "HeightMap.h"
+#include "RenderingEngine.h"
+#include "PhysicsEngine.h"
+#include "GMath.h"
 //#include <md2.h>
 #pragma comment(lib, "FreeImage.lib")
 
@@ -32,6 +35,7 @@ void RenderTimer(int Dif)
 {
 	const int time = 1000 / __FPS__;
 	glutTimerFunc(time, RenderTimer, time);
+	PhysicsEngine::Simulate(time);
 	glutPostRedisplay();
 }
 
@@ -124,8 +128,9 @@ void Draw()
 	//gluLookAt(CameraLoc.x, CameraLoc.y, CameraLoc.z, CameraLoc.x + CameraTilt.XAngle, CameraLoc.y, CameraLoc.z + CameraTilt.ZAngle, 0, 1, 0);
 	camera.RenderLookAt();
 
-	for (int i = 0; i < RenderedObjects.size(); i++)
-		RenderedObjects[i]->Render();
+	RenderingEngine::Render();
+	//for (int i = 0; i < RenderedObjects.size(); i++)
+	//	RenderedObjects[i]->Render();
 
 
 	//glPushMatrix();
@@ -204,18 +209,20 @@ void Init()
 
 void LoadObjects()
 {
-	HeightMap* HM = new HeightMap(1);
+	HeightMap* HM = new HeightMap(true);
 	//HM->SetStepSize(1);
 	HM->Load("map2.jpg");
-	HM->SetScale(0.9);
+	HM->SetScale(1);
+	//HM->Location.y = -100;
 	RenderedObjects.push_back(HM);
 
-	Mesh* Apple = new Mesh();
-	Apple->SetScale(0.25);
+	Mesh* Apple = new Mesh(true);
+	Apple->SetScale(.25);
 	Apple->Load("apple.obj");
-	RenderedObjects.push_back(Apple);
+	//RenderedObjects.push_back(Apple);
 
-	
+	PhysicsObject* Phy = new PhysicsObject(Apple);
+	Phy->SetVelocity(GVector(0, 1, 5));
 
 	//model1.LoadModel("Ogros.md2");
 	//model1.LoadSkin("igdosh.jpg");
@@ -237,7 +244,8 @@ int main(int argc, char *argv[])
 	Init();
 	LoadObjects();
 	
-	
+	for (int i = 0; i < 20; i++)
+		cout << GMath::RandNumRange<int>(0, 10);
 
 	glutMainLoop();
 

@@ -47,6 +47,7 @@ public:
 
 	Mesh();
 	Mesh(int glListIndex);
+	~Mesh();
 
 	virtual bool Load(char* FileName) override;
 	virtual void Build() override;

@@ -1,22 +1,40 @@
 ﻿#pragma once
-#include <vector>
 #include "GVector.h"
+#include "GObject.h"
 
-using namespace std;
-class PhysicsObject
+class PhysicsObject : public GObject
 {
 
-	
-
-public:
-
-	GVector Location;
 	GVector Velocity;
-
 	GVector Acceleration;
 
+	float Mass;
+
+protected:
+
+	virtual void Init() override;
+public:
+
+
 	PhysicsObject();
-	PhysicsObject(GVector Location, GVector Velocity);
+	PhysicsObject(const float & Mass);
+	PhysicsObject(GObject* Parent);
+	PhysicsObject(GObject* Parent, const float & Mass);
 	
-	void Integrate(float DeltaTime);
+	inline GVector GetVelocity() const { return Velocity; }
+	inline GVector GetAcceleration() const { return Acceleration; }
+
+	void SetVelocity(const GVector & NewVelocity);
+	void AddRelativeVelocity(const GVector & Amount);
+	void AddRelativeVelocity(const float & AmountX, const float & AmountY, const float & AmountZ);
+
+	void SetAcceleration(const GVector & NewAcceleration);
+	void AddRelativeAcceleration(const GVector & Amount);
+	void AddRelativeAcceleration(const float & AmountX, const float & AmountY, const float & AmountZ);
+
+	void SetMass(const float & NewMass);
+	inline float GetMass() const { return Mass; }
+
+	virtual	void Update(const float & DeltaTime);
+	void Integrate(const float & DeltaTime);
 };

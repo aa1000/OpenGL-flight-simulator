@@ -37,6 +37,11 @@ void GVector::init(float init)
 	x = y = z = init;
 }
 
+GVector GVector::StaticInit(float init)
+{
+	return GVector(init, init, init);
+}
+
 void GVector::ZeroOut()
 {
 	x = y = z = 0;
@@ -53,6 +58,13 @@ GVector GVector::GetUnitVector()
 	return GVector(x / mag, y / mag, z / mag);
 }
 
+void GVector::AddFloatAmount(const float& AmountX, const float& AmountY, const float& AmountZ)
+{
+	this->x = AmountX;
+	this->y = AmountY;
+	this->z = AmountZ;
+}
+
 GVector& GVector::operator=(const GVector& other)
 {
 	this->x = other.x;
@@ -66,6 +78,22 @@ GVector& GVector::operator+=(const GVector& other)
 	this->x += other.x;
 	this->y += other.y;
 	this->z += other.z;
+	return *this;
+}
+
+GVector& GVector::operator-=(const GVector& other)
+{
+	this->x -= other.x;
+	this->y -= other.y;
+	this->z -= other.z;
+	return *this;
+}
+
+GVector& GVector::operator*=(const float& scalar)
+{
+	this->x *= scalar;
+	this->y *= scalar;
+	this->z *= scalar;
 	return *this;
 }
 

@@ -37,10 +37,14 @@ public:
 class GObject
 {
 	GObject* Parent;
+	GTransform Transform;
 
+protected:
+
+	virtual void Init();
 public:
 
-	GTransform Transform;
+	
 
 	GObject();
 	GObject(GObject* Parent);
@@ -49,6 +53,26 @@ public:
 	inline GObject* GetParent() const { return  Parent; }
 
 	inline GTransform GetTransform() { return Transform; }
-
+	inline GVector GetLocation() { return Transform.Location; }
+	inline GVector GetRoation() { return Transform.Rotation; }
+	inline GVector GetScale() { return Transform.Scale; }
+	
 	void SetTransform(const GTransform & NewTransform);
+	void SetTransform(const GVector & Location, const GVector & Rotation, const GVector & Scale);
+	void SetLocation(const GVector & NewLocation);
+	void SetRoation(const GVector & NewRotaion);
+	void SetScale(const GVector & Scale);
+	void SetScale(const float & NewScale);
+	void MultiplyScale(const float & Mul);
+
+	void AddRelativeLocation(const GVector & Amount);
+	void AddRelativeLocation(const float & AmountX, const float & AmountY, const float & AmountZ);
+
+	void AddRelativeRotation(const GVector & Amount);
+	void AddRelativeRotation(const float & AmountX, const float & AmountY, const float & AmountZ);
+
+	void AddRelativeScale(const GVector & Amount);
+	void AddRelativeScale(const float & AmountX, const float & AmountY, const float & AmountZ);
+	
+	
 };
