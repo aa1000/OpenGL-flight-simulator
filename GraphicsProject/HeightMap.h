@@ -20,7 +20,7 @@ class HeightMap : public RenderedObject
 
 public:
 	HeightMap();
-	HeightMap(int glListIndex);
+	HeightMap(bool RenderInList);
 	~HeightMap();
 	virtual bool Load(char* FileName) override;
 	virtual void Build() override;

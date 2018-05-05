@@ -43,10 +43,8 @@ public:
 	vector<GLuint> texs;
 
 
-	int glListIndex;
-
 	Mesh();
-	Mesh(int glListIndex);
+	Mesh(bool RenderInList);
 	~Mesh();
 
 	virtual bool Load(char* FileName) override;

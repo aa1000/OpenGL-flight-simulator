@@ -1,20 +1,19 @@
 ﻿#include "GObject.h"
 #include "ResourceManager.h"
 
-void GObject::Init()
-{
-	ResourceManager::AddGameObject(this);
-	SetScale(GVector::StaticInit(1));
-}
 
 GObject::GObject()
 {
 	Parent = nullptr;
+	ResourceManager::AddGameObject(this);
+	SetScale(GVector::StaticInit(1));
 }
 
 GObject::GObject(GObject* Parent)
 {
 	this->Parent = Parent;
+	ResourceManager::AddGameObject(this);
+	SetScale(GVector::StaticInit(1));
 }
 
 void GObject::SetParent(GObject* Parent)

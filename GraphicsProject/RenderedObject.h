@@ -7,8 +7,6 @@ class RenderedObject : public GObject
 {
 	int glListIndex;
 
-protected:
-	virtual void Init() override;
 public:
 	
 

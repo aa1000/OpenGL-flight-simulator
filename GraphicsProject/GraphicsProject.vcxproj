@@ -155,9 +155,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
-    <ClCompile Include="PhysicsObjectComponent.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
-    <ClCompile Include="RenderedObjectComponent.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SphereParticleEmitter.cpp" />
@@ -176,9 +174,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsObject.h" />
-    <ClInclude Include="PhysicsObjectComponent.h" />
     <ClInclude Include="RenderedObject.h" />
-    <ClInclude Include="RenderedObjectComponent.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SphereParticleEmitter.h" />

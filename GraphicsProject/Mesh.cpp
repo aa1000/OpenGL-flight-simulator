@@ -7,8 +7,8 @@ Mesh::Mesh()
 {
 }
 
-Mesh::Mesh(int glListIndex)
-	:RenderedObject(glListIndex)
+Mesh::Mesh(bool RenderInList)
+	:RenderedObject(RenderInList)
 {
 }
 

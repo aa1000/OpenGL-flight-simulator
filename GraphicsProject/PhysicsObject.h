@@ -10,9 +10,6 @@ class PhysicsObject : public GObject
 
 	float Mass;
 
-protected:
-
-	virtual void Init() override;
 public:
 
 

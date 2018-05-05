@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "RenderedObjectComponent.h"
 #include <vector>
+#include "RenderedObject.h"
 
 class Camera;
 

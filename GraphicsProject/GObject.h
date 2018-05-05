@@ -39,9 +39,6 @@ class GObject
 	GObject* Parent;
 	GTransform Transform;
 
-protected:
-
-	virtual void Init();
 public:
 
 	

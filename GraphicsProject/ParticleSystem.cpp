@@ -10,10 +10,10 @@ const GLfloat ParticleSystem::VertexBufferData[] = {
 	0.5f, 0.5f, 0.0f,
 };
 
-void ParticleSystem::Init()
+ParticleSystem::ParticleSystem()
+	:RenderedObject(), PhysicsObject()
 {
-	RenderedObject::Init();
-	PhysicsObject::Init();
+	MaxParticles = 10000;
 	QuadsPerColor = 1;
 	LastParticle = 0;
 	NewParticles = MaxParticles / 10;
@@ -21,23 +21,23 @@ void ParticleSystem::Init()
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
-ParticleSystem::ParticleSystem()
-	:RenderedObject(), PhysicsObject()
-{
-	MaxParticles = 10000;
-	Init();
-}
-
 ParticleSystem::ParticleSystem(GObject* Parent)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
-	Init();
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
+	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(Camera* camera)
 	: RenderedObject(), PhysicsObject()
 {
-	Init();
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	ParticlesContainer = new Particle[MaxParticles];
 	this->camera = camera;
 }
 
@@ -45,31 +45,47 @@ ParticleSystem::ParticleSystem(int MaxParticles)
 	: RenderedObject(), PhysicsObject()
 {
 	this->MaxParticles = MaxParticles;
-	Init();
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
+	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
 	this->MaxParticles = MaxParticles;
-	Init();
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
+	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, Camera* camera, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
 	this->MaxParticles = MaxParticles;
-	Init();
 	this->camera = camera;
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
+	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, Camera* camera, ParticleEmitter* Emitter, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
-	Init();
 	this->MaxParticles = MaxParticles;
 	this->camera = camera;
 	this->Emitter = Emitter;
+	QuadsPerColor = 1;
+	LastParticle = 0;
+	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
+	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::~ParticleSystem()
@@ -156,7 +172,7 @@ void ParticleSystem::AddTexture(const GLuint& Texture)
 void ParticleSystem::Build()
 {
 	// Fill the GPU buffer
-	g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x;
+	/*g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x;
 	g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y;
 	g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z;
 
@@ -165,7 +181,7 @@ void ParticleSystem::Build()
 	g_particule_color_data[4 * ParticlesCount + 0] = p.r;
 	g_particule_color_data[4 * ParticlesCount + 1] = p.g;
 	g_particule_color_data[4 * ParticlesCount + 2] = p.b;
-	g_particule_color_data[4 * ParticlesCount + 3] = p.a;
+	g_particule_color_data[4 * ParticlesCount + 3] = p.a;*/
 }
 
 void ParticleSystem::Update(const float & DeltaTime)
@@ -188,15 +204,15 @@ void ParticleSystem::Update(const float & DeltaTime)
 				// Simulate simple physics
 				P.Velocity += GVector(0.0f, GetMass() * PhysicsEngine::GetGravity(), 0.0f) * DeltaTime;
 				P.Location += P.Velocity * DeltaTime;
-				P.cameradistance = glm::length2(p.pos - CameraPosition);
+			//	P.cameradistance = glm::length2(p.pos - CameraPosition);
 
 			}
 			else {
 				// Particles that just died will be put at the end of the buffer in SortParticles();
-				P.cameradistance = -1.0f;
+		//		P.cameradistance = -1.0f;
 			}
 
-			ParticlesCount++;
+//			ParticlesCount++;
 
 		}
 	}

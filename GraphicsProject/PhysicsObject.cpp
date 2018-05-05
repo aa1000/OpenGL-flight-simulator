@@ -1,30 +1,26 @@
 ﻿#include "PhysicsObject.h"
 #include "PhysicsEngine.h"
 
-void PhysicsObject::Init()
-{
-	__super::Init();
-	PhysicsEngine::AddPhysicsObject(this);
-	this->Mass = 1;
-}
 
 PhysicsObject::PhysicsObject()
 	:GObject()
 {
-	Init();
+	PhysicsEngine::AddPhysicsObject(this);
+	this->Mass = 1;
 }
 
 PhysicsObject::PhysicsObject(const float& Mass)
 	:GObject()
 {
-	Init();
+	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = Mass;
 }
 
 PhysicsObject::PhysicsObject(GObject* Parent)
 	:GObject(Parent)
 {
-	Init();
+	PhysicsEngine::AddPhysicsObject(this);
+	this->Mass = 1;
 
 	if (Parent)
 	{
@@ -36,7 +32,7 @@ PhysicsObject::PhysicsObject(GObject* Parent)
 PhysicsObject::PhysicsObject(GObject* Parent, const float& Mass)
 	:GObject(Parent)
 {
-	Init();
+	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = Mass;
 
 	if (Parent)

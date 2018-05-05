@@ -1,39 +1,36 @@
 ﻿#include "RenderedObject.h"
 #include "RenderingEngine.h"
 
-void RenderedObject::Init()
-{
-	__super::Init();
-	glListIndex = -1;
-	RenderingEngine::AddRenderedObject(this);
-}
-
 RenderedObject::RenderedObject()
 	:GObject()
 {
-	Init();
+	glListIndex = -1;
+	RenderingEngine::AddRenderedObject(this);
 }
 
 RenderedObject::RenderedObject(GObject* Parent)
 	:GObject(Parent)
 {
-	Init();
+	glListIndex = -1;
+	RenderingEngine::AddRenderedObject(this);
 }
 
 RenderedObject::RenderedObject(bool RenderInList)
 	:GObject()
 {
-	Init();
+	RenderingEngine::AddRenderedObject(this);
 	if(RenderInList)
 		this->glListIndex = RenderingEngine::GetLastIndex();
+	
 }
 
 RenderedObject::RenderedObject(GObject* Parent, bool RenderInList)
 	:GObject(Parent)
 {
-	Init();
+	RenderingEngine::AddRenderedObject(this);
 	if (RenderInList)
 		this->glListIndex = RenderingEngine::GetLastIndex();
+	
 }
 
 RenderedObject::~RenderedObject()

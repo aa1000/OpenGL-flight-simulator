@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "PhysicsObject.h"
 #include <vector>
-#include "PhysicsObjectComponent.h"
 
 using namespace std;
 class PhysicsEngine

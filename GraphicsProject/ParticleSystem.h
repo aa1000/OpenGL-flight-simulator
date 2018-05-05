@@ -59,7 +59,6 @@ class ParticleSystem : public RenderedObject, public PhysicsObject
 
 	void FindLastParticle();
 protected:
-	virtual void Init() override;
 	virtual void Build() override;
 	virtual void Compile() override;
 	virtual void EmitPrticle(Particle & p);
