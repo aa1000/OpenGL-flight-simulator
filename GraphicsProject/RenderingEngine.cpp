@@ -1,8 +1,13 @@
 ﻿#include "RenderingEngine.h"
-
+#include "Camera.h"
 
 vector<RenderedObject*> RenderingEngine::RenderedObjects;
+Camera* RenderingEngine::ActiveCamera;
 
+void RenderingEngine::SetActiveCamera(Camera* ActiveCamera)
+{
+	RenderingEngine::ActiveCamera = ActiveCamera;
+}
 
 void RenderingEngine::AddRenderedObject(RenderedObject* RenderedObject)
 {

@@ -1,5 +1,7 @@
 ﻿#include "ParticleSystem.h"
 #include "ParticleEmitter.h"
+#include "RenderingEngine.h"
+#include "PhysicsEngine.h"
 
 const GLfloat ParticleSystem::VertexBufferData[] = {
 	-0.5f, -0.5f, 0.0f,
@@ -15,6 +17,7 @@ void ParticleSystem::Init()
 	QuadsPerColor = 1;
 	LastParticle = 0;
 	NewParticles = MaxParticles / 10;
+	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
@@ -34,6 +37,7 @@ ParticleSystem::ParticleSystem(GObject* Parent)
 ParticleSystem::ParticleSystem(Camera* camera)
 	: RenderedObject(), PhysicsObject()
 {
+	Init();
 	this->camera = camera;
 }
 
@@ -47,15 +51,16 @@ ParticleSystem::ParticleSystem(int MaxParticles)
 ParticleSystem::ParticleSystem(GObject* Parent, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
-	Init();
 	this->MaxParticles = MaxParticles;
+	Init();
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, Camera* camera, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
-	Init();
 	this->MaxParticles = MaxParticles;
+	Init();
+	this->camera = camera;
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, Camera* camera, ParticleEmitter* Emitter, int MaxParticles)
@@ -131,54 +136,70 @@ void ParticleSystem::Compile()
 
 }
 
+void ParticleSystem::EmitPrticle(Particle& p)
+{
+	if (Emitter)
+		Emitter->EmitParticle(p);
+}
+
 
 void ParticleSystem::SetCamera(Camera* camera)
 {
 	this->camera = camera;
 }
 
+void ParticleSystem::AddTexture(const GLuint& Texture)
+{
+	Textures.push_back(Texture);
+}
+
+void ParticleSystem::Build()
+{
+	// Fill the GPU buffer
+	g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x;
+	g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y;
+	g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z;
+
+	g_particule_position_size_data[4 * ParticlesCount + 3] = p.size;
+
+	g_particule_color_data[4 * ParticlesCount + 0] = p.r;
+	g_particule_color_data[4 * ParticlesCount + 1] = p.g;
+	g_particule_color_data[4 * ParticlesCount + 2] = p.b;
+	g_particule_color_data[4 * ParticlesCount + 3] = p.a;
+}
+
 void ParticleSystem::Update(const float & DeltaTime)
 {
 	// Simulate all particles
 	//int ParticlesCount = 0;
-	//for (int i = 0; i<MaxParticles; i++) {
+	for (int i = 0; i<MaxParticles; i++) {
 
-	//	Particle& P = ParticlesContainer[i];
+		Particle& P = ParticlesContainer[i];
 
-	//	if (P.life > 0.0f) {
+		if (P.LifeTime < 0.0f)
+			EmitPrticle(P);
+		else
+		{
 
-	//		// Decrease life
-	//		P.life -= delta;
-	//		if (P.life > 0.0f) {
+			// Decrease life
+			P.LifeTime -= DeltaTime;
+			if (P.LifeTime > 0.0f) {
 
-	//			// Simulate simple physics : gravity only, no collisions
-	//			P.Speed += glm::vec3(0.0f, -9.81f, 0.0f) * (float)delta * 0.5f;
-	//			p.pos += p.speed * (float)delta;
-	//			p.cameradistance = glm::length2(p.pos - CameraPosition);
-	//			//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
+				// Simulate simple physics
+				P.Velocity += GVector(0.0f, GetMass() * PhysicsEngine::GetGravity(), 0.0f) * DeltaTime;
+				P.Location += P.Velocity * DeltaTime;
+				P.cameradistance = glm::length2(p.pos - CameraPosition);
 
-	//			// Fill the GPU buffer
-	//			g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x;
-	//			g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y;
-	//			g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z;
+			}
+			else {
+				// Particles that just died will be put at the end of the buffer in SortParticles();
+				P.cameradistance = -1.0f;
+			}
 
-	//			g_particule_position_size_data[4 * ParticlesCount + 3] = p.size;
+			ParticlesCount++;
 
-	//			g_particule_color_data[4 * ParticlesCount + 0] = p.r;
-	//			g_particule_color_data[4 * ParticlesCount + 1] = p.g;
-	//			g_particule_color_data[4 * ParticlesCount + 2] = p.b;
-	//			g_particule_color_data[4 * ParticlesCount + 3] = p.a;
-
-	//		}
-	//		else {
-	//			// Particles that just died will be put at the end of the buffer in SortParticles();
-	//			P.cameradistance = -1.0f;
-	//		}
-
-	//		ParticlesCount++;
-
-	//	}
-	//}
+		}
+	}
 }
 
 void ParticleSystem::Render()

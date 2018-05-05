@@ -91,8 +91,8 @@ void PhysicsObject::Update(const float& DeltaTime)
 
 void PhysicsObject::Integrate(const float & DeltaTime)
 {
-	const float MilSecsPassed = DeltaTime / 1000;
-	Velocity.y -= PhysicsEngine::GetGravity() * MilSecsPassed;
-	AddRelativeLocation(Velocity * MilSecsPassed);
+	Acceleration.y -= PhysicsEngine::GetGravity() * Mass;
+	AddRelativeVelocity(Acceleration * DeltaTime);
+	AddRelativeLocation(Velocity * DeltaTime);
 }
 

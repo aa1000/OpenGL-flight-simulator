@@ -6,7 +6,7 @@
 #include "RenderedObject.h"
 #include "PhysicsObject.h"
 #include "Camera.h"
-
+#pragma comment(lib,"glew32.lib")
 
 //#include "GL\GL.h"
 using namespace std;
@@ -60,7 +60,9 @@ class ParticleSystem : public RenderedObject, public PhysicsObject
 	void FindLastParticle();
 protected:
 	virtual void Init() override;
+	virtual void Build() override;
 	virtual void Compile() override;
+	virtual void EmitPrticle(Particle & p);
 public:
 	ParticleSystem();
 	ParticleSystem(GObject* Parent);
@@ -76,6 +78,8 @@ public:
 	inline int GetMaxParticles() const { return MaxParticles; }
 
 	void SetCamera(Camera* camera);
+
+	void AddTexture(const GLuint & Texture);
 
 	virtual void Update(const float & DeltaTime) override;
 	virtual void Render() override;

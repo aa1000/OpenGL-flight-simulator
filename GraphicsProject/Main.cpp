@@ -35,7 +35,7 @@ void RenderTimer(int Dif)
 {
 	const int time = 1000 / __FPS__;
 	glutTimerFunc(time, RenderTimer, time);
-	PhysicsEngine::Simulate(time);
+	PhysicsEngine::Simulate(time / 1000.0); // to milli secs
 	glutPostRedisplay();
 }
 
@@ -222,7 +222,7 @@ void LoadObjects()
 	//RenderedObjects.push_back(Apple);
 
 	PhysicsObject* Phy = new PhysicsObject(Apple);
-	Phy->SetVelocity(GVector(0, 1, 5));
+	Phy->SetVelocity(GVector(5, 1, 0));
 
 	//model1.LoadModel("Ogros.md2");
 	//model1.LoadSkin("igdosh.jpg");
@@ -244,8 +244,7 @@ int main(int argc, char *argv[])
 	Init();
 	LoadObjects();
 	
-	for (int i = 0; i < 20; i++)
-		cout << GMath::RandNumRange<int>(0, 10);
+	RenderingEngine::SetActiveCamera(&camera);
 
 	glutMainLoop();
 
