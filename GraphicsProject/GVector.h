@@ -18,6 +18,8 @@ public:
 	float Length() const;
 	GVector GetUnitVector();
 
+	static float GetAngle(const GVector & V1, const GVector & V2);
+
 	void AddFloatAmount(const float & AmountX, const float & AmountY, const float & AmountZ);
 
 	GVector& operator=(const GVector& other); // copy assignment
@@ -32,7 +34,7 @@ public:
 
 	GVector operator-(const GVector& other);
 
-	float operator|(const GVector& other); // dot product
+	float operator|(const GVector& other) const; // dot product
 
 	GVector operator*(const int& scalar); 
 

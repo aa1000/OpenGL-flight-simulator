@@ -49,13 +49,18 @@ void GVector::ZeroOut()
 
 float GVector::Length() const
 {
-	return sqrt(x*x + y*y + z*z);
+	return (float)sqrt(x*x + y*y + z*z);
 }
 
 GVector GVector::GetUnitVector()
 {
 	int mag = Length();
 	return GVector(x / mag, y / mag, z / mag);
+}
+
+float GVector::GetAngle(const GVector& V1, const GVector& V2)
+{
+	return (float)acos( (V1 | V2) / (V1.Length() * V2.Length()) );
 }
 
 void GVector::AddFloatAmount(const float& AmountX, const float& AmountY, const float& AmountZ)
@@ -109,7 +114,7 @@ GVector GVector::operator-(const GVector& other)
 	return out;
 }
 
-float GVector::operator|(const GVector& other)
+float GVector::operator|(const GVector& other) const
 {
 	return x * other.x + y * other.y + z * other.z;
 }

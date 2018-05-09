@@ -2,17 +2,18 @@
 #include "Definitions.h"
 #include <GL/freeglut.h>
 #include <FreeImage.h>
-#include <Math.h>
 #include <iostream>
-#include <vector>
-#include "GVector.h"
-#include "Mesh.h"
 
+#include "GObject.h"
 #include "Camera.h"
 #include "HeightMap.h"
 #include "RenderingEngine.h"
 #include "PhysicsEngine.h"
-#include "GMath.h"
+
+#include "Drawing.h"
+#include "ParticleSystem.h"
+#include "BoxParticleEmitter.h"
+#include "PlayerPlane.h"
 //#include <md2.h>
 #pragma comment(lib, "FreeImage.lib")
 
@@ -20,16 +21,12 @@ using namespace std;
 
 GLfloat AmbientLight[] = { 0.8f, 0.8f, 0.8f, 0.8f };
 GLfloat DiffuseLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat LightPosition[] = { 0.0f, 500.0f, 2.0f, 1.0f };
+GLfloat LightPosition[] = { 0.0f, 10, -5.0f, 1.0f };
 
 //CMD2MODEL model1;
 
-vector<RenderedObject* > RenderedObjects;
-
 Camera camera;
-
-
-
+PlayerPlane* Player;
 
 void RenderTimer(int Dif)
 {
@@ -52,19 +49,10 @@ void Resize(int width, int height)
 	gluPerspective(__FOV__, AR, 1.0f, __SCENE_DEPTH__);
 
 
-	glMatrixMode(GL_MODELVIEW); // to show changes o nthe screen
+	glMatrixMode(GL_MODELVIEW); // to show changes on the screen
 	glLoadIdentity();
 }
 
-void ApplyTexture(GLuint Texture, int Width, int Height)
-{
-	//glBindTexture(GL_TEXTURE_2D, Texture);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // can have gl_nearst for faster computation
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	////texture type, texture quality (0 highest), image type, border width, image format, sign and size for bytes
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, Width, Heightight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, FreeImage_GetBits(fimg));
-}
 
 void KeyboradFunc(unsigned char k, int x, int y) // uses ASCII
 {
@@ -80,29 +68,29 @@ void KeyboradFunc(unsigned char k, int x, int y) // uses ASCII
 
 void SpecialFunc(int k, int x, int y) // uss UTF
 {
-	/*if (k == GLUT_KEY_LEFT)
-	ActiveObj->Location.x -= 1;
-	if (k == GLUT_KEY_RIGHT)
-	ActiveObj->Location.x += 1;*/
 	if (k == GLUT_KEY_LEFT)
 	{
 		camera.RotateLeft();
+		if (Player)
+			Player->MoveLeft();
 	}
 	if (k == GLUT_KEY_RIGHT)
 	{
 		camera.RotateRight();
+		if (Player)
+			Player->MoveRight();
 	}
-	/*if (k == GLUT_KEY_UP)
-	ActiveObj->Location.y += 1;
-	if (k == GLUT_KEY_DOWN)
-	ActiveObj->Location.y -= 1;*/
 	if (k == GLUT_KEY_UP)
 	{
 		camera.MoveForward();
+		if (Player)
+			Player->Accelerate();
 	}
 	if (k == GLUT_KEY_DOWN)
 	{
 		camera.MoveBackwards();
+		if (Player)
+			Player->Break();
 	}
 	if (k == GLUT_KEY_PAGE_UP)
 	{
@@ -117,40 +105,22 @@ void SpecialFunc(int k, int x, int y) // uss UTF
 
 }
 
-float animationTimer = 0;
 void Draw()
 {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(25/255.0, 50/255.0, 95/255.0, 1);
+	glClearColor(0, 0, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	
-	//gluLookAt(CameraLoc.x, CameraLoc.y, CameraLoc.z, CameraLoc.x + CameraTilt.XAngle, CameraLoc.y, CameraLoc.z + CameraTilt.ZAngle, 0, 1, 0);
-	camera.RenderLookAt();
-
 	RenderingEngine::Render();
-	//for (int i = 0; i < RenderedObjects.size(); i++)
-	//	RenderedObjects[i]->Render();
-
-
-	//glPushMatrix();
-	//model1.DrawModel(animationTimer += 0.01);
-	//glPopMatrix();
 
 	glutSwapBuffers();
 
-}
-
-void InitWindow()
-{
-	
 }
 
 void InitLighting()
 {
 	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, AmbientLight);
+	glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHTING);
 }
@@ -169,6 +139,7 @@ void InitFog()
 	glEnable(GL_FOG);
 }
 
+
 void Init()
 {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_RGBA | GLUT_DOUBLE);
@@ -182,58 +153,68 @@ void Init()
 	glutKeyboardFunc(KeyboradFunc);
 	glutSpecialFunc(SpecialFunc);
 
-	glutTimerFunc(33, RenderTimer, 33);
+	glutTimerFunc(1000 / __FPS__, RenderTimer, 1000 / __FPS__);
 	
 
-	//init
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
 	glEnable(GL_TEXTURE_2D);
-	InitLighting();
-	//InitFog();
 
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	glShadeModel(GL_SMOOTH);
 	glDepthFunc(GL_LEQUAL);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 
-	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	//glEnable(GL_POLYGON_SMOOTH);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	glEnable(GL_POLYGON_SMOOTH);
 
-	//glDisable(GL_DEPTH_TEST);
-	//glEnable(GL_ALPHA_TEST);
+	InitLighting();
+	//InitFog();
 }
 
 void LoadObjects()
 {
-	HeightMap* HM = new HeightMap(true);
+
+
+	HeightMap* HM = new HeightMap(true); 
+	HM->SetTexture(Drawing::LoadTexture("SnowMap.png"));
 	//HM->SetStepSize(1);
 	HM->Load("map2.jpg");
-	HM->SetScale(1);
+	//HM->SetScale(1);
 	//HM->Location.y = -100;
-	RenderedObjects.push_back(HM);
 
-	Mesh* Apple = new Mesh(true);
-	Apple->SetScale(.25);
-	Apple->Load("apple.obj");
-	//RenderedObjects.push_back(Apple);
+	//Mesh* Apple = new Mesh(true);
+	//Apple->SetAngle(90);
+	//Apple->SetRoation(GVector(0, 1, 0));
+	////Apple->SetScale(.25);
+	//Apple->Load("A6M_ZERO.obj");
 
-	PhysicsObject* Phy = new PhysicsObject(Apple);
-	Phy->SetVelocity(GVector(5, 1, 0));
+	//PhysicsObject* Phy = new PhysicsObject(&camera, 0.001);
+	//Phy->AddRelativeLocation(-10, 4, 0);
+	//Phy->SetVelocity(GVector(5, 0, 0));
 
-	//model1.LoadModel("Ogros.md2");
-	//model1.LoadSkin("igdosh.jpg");
-	//model1.ScaleModel(0.25);
-	//model1.SetAnim(0);
+	Player = new PlayerPlane();
+
+	ParticleSystem* PS = new ParticleSystem;
+	PS->SetMass(0.01);
+	PS->AddTexture("snowflake0.png");
+	PS->AddTexture("snowflake1.png");
+	PS->AddTexture("snowflake2.png");
+
+
+	BoxParticleEmitter* PE = new BoxParticleEmitter((RenderedObject*)PS, GVector(0, 50, 0), GVector(500, 50, 500));
+	PE->SetLifeTime(10, 20);
+	PE->SetSpeed(1, 1);
+	PE->SetSize(8, 15);
+	PS->SetEmitter(PE);
+	//PS->InitPaticles();
 }
 
 void Destruct()
 {
-	for (int i = 0; i < RenderedObjects.size(); i++)
-		delete RenderedObjects[i];
 }
 
 int main(int argc, char *argv[])
@@ -241,6 +222,7 @@ int main(int argc, char *argv[])
 	cout << "Loading ....";
 
 	glutInit(&argc, argv);
+
 	Init();
 	LoadObjects();
 	

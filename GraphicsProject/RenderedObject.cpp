@@ -52,7 +52,7 @@ void RenderedObject::ApplyTransforms()
 	GVector Scale = GetScale();
 
 	glTranslatef(Location.x, Location.y, Location.z);
-	glRotatef(1.0f, Rotation.x, Rotation.y, Rotation.z);
+	glRotatef(GetAngle(), Rotation.x, Rotation.y, Rotation.z);
 	glScalef(Scale.x, Scale.y, Scale.z);
 }
 
@@ -71,9 +71,14 @@ void RenderedObject::Compile()
 	}
 }
 
+void RenderedObject::BindTextures()
+{
+}
+
 void RenderedObject::Render()
 {
 	glPushMatrix();
+	BindTextures();
 	ApplyTransforms();
 	
 	if (glListIndex > -1)

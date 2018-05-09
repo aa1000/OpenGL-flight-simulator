@@ -75,6 +75,12 @@
     <ClCompile Include="GMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GShader.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GVector.h">
@@ -126,6 +132,12 @@
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="GMath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GShader.h">
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerPlane.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

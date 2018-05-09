@@ -1,4 +1,5 @@
 ﻿#include "BoxParticleEmitter.h"
+#include "ParticleSystem.h"
 #include "GMath.h"
 
 BoxParticleEmitter::BoxParticleEmitter()
@@ -20,7 +21,8 @@ BoxParticleEmitter::BoxParticleEmitter(GObject* Parent, const GVector& MinBounds
 
 void BoxParticleEmitter::EmitParticle(Particle& p)
 {
-
+	p.Location =  GMath::RandNumRange<GVector>(MinBounds, MaxBounds);
+	__super::EmitParticle(p);
 }
 
 void BoxParticleEmitter::SetMinBounds(const GVector& MinBounds)

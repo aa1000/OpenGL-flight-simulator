@@ -17,7 +17,8 @@ void PhysicsEngine::AddPhysicsObject(PhysicsObject* PhysicsObjectComponent)
 void PhysicsEngine::Simulate(float DeltaTime)
 {
 	for (int i = 0; i < PhysicsObjects.size(); i++)
-		PhysicsEngine::PhysicsObjects[i]->Update(DeltaTime);
+		if(PhysicsEngine::PhysicsObjects[i])
+			PhysicsEngine::PhysicsObjects[i]->Update(DeltaTime);
 }
 
 float PhysicsEngine::GetGravity()

@@ -73,6 +73,11 @@ void PhysicsObject::AddRelativeAcceleration(const float& AmountX, const float& A
 	this->Acceleration.AddFloatAmount(AmountX, AmountY, AmountZ);
 }
 
+void PhysicsObject::SetMass(const float& NewMass)
+{
+	this->Mass = Mass;
+}
+
 void PhysicsObject::Update(const float& DeltaTime)
 {
 	Integrate(DeltaTime);
@@ -82,6 +87,7 @@ void PhysicsObject::Update(const float& DeltaTime)
 	{
 		Parent->SetLocation(GetLocation());
 		Parent->SetRoation(GetRoation());
+		Parent->SetAngle(GetAngle());
 	}
 }
 

@@ -1,12 +1,13 @@
 ﻿#pragma once
 #include "GVector.h"
-class Camera
+#include "GObject.h"
+
+class Camera : public GObject
 {
 public:
 	GVector CameraLocation;
 	GVector CameraRoation;
-	float CameraHeadingX;
-	float CameraHeadingZ;
+	GVector CameraHeading;
 
 	float CameraLocationSen;
 	float CameraRotationSen;
@@ -18,6 +19,8 @@ public:
 
 	void MoveUp();
 	void MoveDown();
+	void MoveRight();
+	void MoveLeft();
 
 	void MoveForward();
 	void MoveBackwards();

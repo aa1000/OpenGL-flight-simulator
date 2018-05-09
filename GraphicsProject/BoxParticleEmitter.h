@@ -10,6 +10,8 @@ public:
 	BoxParticleEmitter();
 	BoxParticleEmitter(GObject* Parent);
 	BoxParticleEmitter(GObject* Parent, const GVector & MinBounds, const GVector & MaxBounds);
+
+
 	virtual void EmitParticle(Particle& p) override;
 
 	void SetMinBounds(const GVector & MinBounds);

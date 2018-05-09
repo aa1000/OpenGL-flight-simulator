@@ -147,6 +147,7 @@
     <ClCompile Include="Drawing.cpp" />
     <ClCompile Include="GMath.cpp" />
     <ClCompile Include="GObject.cpp" />
+    <ClCompile Include="GShader.cpp" />
     <ClCompile Include="GVector.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="PlayerPlane.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -167,6 +169,7 @@
     <ClInclude Include="Drawing.h" />
     <ClInclude Include="GMath.h" />
     <ClInclude Include="GObject.h" />
+    <ClInclude Include="GShader.h" />
     <ClInclude Include="GVector.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Mesh.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsObject.h" />
+    <ClInclude Include="PlayerPlane.h" />
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="ResourceManager.h" />

@@ -21,7 +21,7 @@ GLuint Drawing::LoadTexture(char* filename, bool invert)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//texture type, texture quality (0 highest), image type, border width, image format, sign and size for bytes
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(fimg));
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(fimg));
 
 	FreeImage_Unload(fimg);
 
@@ -32,8 +32,11 @@ GVector Drawing::CalculateNormal(GVector A, GVector B, GVector C)
 {
 	GVector AC = C - A;
 	GVector AB = B - A;
-
 	GVector Cross = AC*AB;
 
-	return Cross * -1;// .GetUnitVector();;
+	
+
+	Cross = Cross.GetUnitVector();
+
+	return Cross;
 }

@@ -16,8 +16,13 @@ void RenderingEngine::AddRenderedObject(RenderedObject* RenderedObject)
 
 void RenderingEngine::Render()
 {
+
+	ActiveCamera->RenderLookAt();
+
 	for (int i = 0; i < RenderedObjects.size(); i++)
-		RenderedObjects[i]->Render();
+		if(RenderedObjects[i])
+			RenderedObjects[i]->Render();
+
 }
 
 int RenderingEngine::GetLastIndex()

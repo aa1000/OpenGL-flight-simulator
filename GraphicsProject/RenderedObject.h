@@ -22,5 +22,6 @@ public:
 	void ApplyTransforms();
 	virtual void Build();
 	virtual void Compile();
+	virtual void BindTextures();
 	virtual void Render();
 };

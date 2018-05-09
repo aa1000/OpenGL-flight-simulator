@@ -1,6 +1,7 @@
 ﻿#include "HeightMap.h"
 #include <FreeImage.h>
 #include "Drawing.h"
+#include <iostream>
 
 HeightMap::HeightMap()
 	:RenderedObject()
@@ -30,6 +31,12 @@ HeightMap::~HeightMap()
 	delete[] HeightMapBytes;
 	delete[] HeightMapNormals;
 
+	glDeleteTextures(1, &Texture);
+}
+
+void HeightMap::SetTexture(const GLuint& Texture)
+{
+	this->Texture = Texture;
 }
 
 bool HeightMap::Load(char* FileName)
@@ -56,7 +63,7 @@ bool HeightMap::Load(char* FileName)
 
 	FreeImage_Unload(img);
 
-	CalculateNormals();
+//	CalculateNormals();
 	return __super::Load(FileName);
 }
 
@@ -97,31 +104,33 @@ void HeightMap::CalculateEdgeNormals()
 {
 	// bottom Left
 	GVector A = GetVertex(0, 0);
-	GVector B = GetVertex(1, 0);
-	GVector C = GetVertex(0, 1);
+	GVector B = GetVertex(StepSize, 0);
+	GVector C = GetVertex(0, StepSize);
 
 	HeightMapNormals[0][0] = Drawing::CalculateNormal(A, B, C);
 
 	// Top Left
-	A = GetVertex(0, MapHeight - StepSize);
-	B = GetVertex(StepSize, MapHeight - StepSize);
-	C = GetVertex(0, MapHeight - StepSize);
+	A = GetVertex(0, MapHeight - 1);
+	B = GetVertex(0, MapHeight - StepSize);
+	C = GetVertex(StepSize, MapHeight - 1);
+		
 
-	HeightMapNormals[0][MapHeight - StepSize] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[0][MapHeight - 1] = Drawing::CalculateNormal(A, B, C);
 
 	// Top Right
-	A = GetVertex(MapWidth - StepSize, MapHeight - StepSize);
-	B = GetVertex(MapWidth - StepSize -1 , MapHeight - StepSize);
-	C = GetVertex(MapWidth - StepSize, MapHeight - StepSize);
+	A = GetVertex(MapWidth - 1, MapHeight - 1);
+	B = GetVertex(MapWidth - StepSize, MapHeight - 1);		
+	C = GetVertex(MapWidth - 1, MapHeight - StepSize);
 
-	HeightMapNormals[MapHeight - StepSize][MapWidth - StepSize] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[MapHeight - 1][MapWidth - 1] = Drawing::CalculateNormal(A, B, C);
 
 	// Bottom Left
-	A = GetVertex(MapWidth - StepSize, 0);
-	B = GetVertex(MapWidth - StepSize -1 , 0);
-	C = GetVertex(MapWidth - StepSize, StepSize);
+	A = GetVertex(MapWidth - 1, 0);
+	B = GetVertex(MapWidth - 1, StepSize);
+	C = GetVertex(MapWidth - StepSize, 0);
+		
 
-	HeightMapNormals[MapWidth - StepSize ][0] = Drawing::CalculateNormal(A, B, C);
+	HeightMapNormals[MapWidth - 1 ][0] = Drawing::CalculateNormal(A, B, C);
 }
 
 void HeightMap::Calculate3EdgeNormals()
@@ -141,11 +150,11 @@ void HeightMap::Calculate3EdgeNormals()
 		RP = GetVertex(X - StepSize, Z);
 		// Left Point
 		LP = GetVertex(X + StepSize, Z);
-		// Z Point
+		// Out Point
 		OP = GetVertex(X, Z + StepSize);
 
 		// Right Out Normal
-		RON = Drawing::CalculateNormal(CP, RP, OP);
+		RON = Drawing::CalculateNormal(CP, OP, RP);
 		// Left Out Normal
 		LON = Drawing::CalculateNormal(CP, LP, OP);
 
@@ -169,7 +178,7 @@ void HeightMap::Calculate3EdgeNormals()
 		// Right Out Normal
 		RON = Drawing::CalculateNormal(CP, RP, OP);
 		// Left Out Normal
-		LON = Drawing::CalculateNormal(CP, LP, OP);
+		LON = Drawing::CalculateNormal(CP, OP, LP);
 
 		Normal = (RON + LON) / 2;
 		HeightMapNormals[X][Z] = Normal.GetUnitVector();
@@ -213,7 +222,7 @@ void HeightMap::Calculate3EdgeNormals()
 		// Right Out Normal
 		RON = Drawing::CalculateNormal(CP, RP, OP);
 		// Left Out Normal
-		LON = Drawing::CalculateNormal(CP, LP, OP);
+		LON = Drawing::CalculateNormal(CP, OP, LP);
 
 		Normal = (RON + LON) / 2;
 		HeightMapNormals[X][Z] = Normal.GetUnitVector();
@@ -229,6 +238,7 @@ void HeightMap::Calculate4EdgeNormals()
 	{
 		for (int Z = StepSize; Z < MapHeight - StepSize; Z+= StepSize)
 		{
+			//std::cout << X << "\t";
 			// Centre Point
 			CP = GetVertex(X, Z);
 			// Top Point
@@ -241,18 +251,40 @@ void HeightMap::Calculate4EdgeNormals()
 			LP = GetVertex(X - StepSize , Z);
 
 			// Top Right Normal
-			TRN = Drawing::CalculateNormal(CP, TP, RP);
+			TRN = Drawing::CalculateNormal(CP, RP, TP);
 			// Right Bottom Normal
-			RBN = Drawing::CalculateNormal(CP, RP, BP);
+			RBN = Drawing::CalculateNormal(CP, BP, RP);
 			// Bottom Left Normal
-			BLN = Drawing::CalculateNormal(CP, BP, LP);
+			BLN = Drawing::CalculateNormal(CP, LP, BP);
 			// Left Top Normal
-			LTN = Drawing::CalculateNormal(CP, LP, TP);
+			LTN = Drawing::CalculateNormal(CP, TP, LP);
 
 			Normal = (TRN + RBN + BLN + LTN) / 4;
 			HeightMapNormals[X][Z] = Normal.GetUnitVector();
 		}
 	}
+}
+
+GVector HeightMap::CalculateEdgeNormal(const int& X, const int& Z)
+{
+	return GVector();
+}
+
+GVector HeightMap::CalculateNormal(const int& X, const int& Z)
+{
+	//finite diffrence 
+	
+
+	int OffsetX = StepSize;
+	int OffsetZ = StepSize;
+
+	int HL = GetVertex(X - OffsetX, Z).y;
+	int HR = GetVertex(X + OffsetX, Z).y;
+	int HD = GetVertex(X, Z - OffsetZ).y;
+	int HU = GetVertex(X, Z + OffsetZ).y;
+
+	GVector Normal(HL - HR, OffsetZ * 2, HD - HU);
+	return Normal.GetUnitVector();
 }
 
 void HeightMap::BuildPolygon(const int & X, const int & Z)
@@ -261,17 +293,21 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	GVector Normal;
 	//Normal = CalculatePlaneNormal(X, Z);
 	//glNormal3f(Normal.x, Normal.y, Normal.z);
+	//std::cout << X << "\t";
 	
-	glColor3f(0, 0, 1);
-
 	//Bottom left point
 	x = X;
 	z = Z;
 	y = HeightMapBytes[x][z];
 
-	Normal = HeightMapNormals[x][z];
-	glNormal3f(Normal.x, Normal.y, Normal.z);
+	//Normal = HeightMapNormals[x][z];
+	Normal = CalculateNormal(x, z);
 
+	if (Normal.x  <= 0 && Normal.y <= 0 && Normal.z <= 0)
+		GVector();
+
+	glTexCoord2d(0, 0);
+	glNormal3f(Normal.x, Normal.y, Normal.z);
 	glVertex3f(x, y, z);
 
 	//Top Left Point
@@ -279,9 +315,14 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	z = Z + StepSize;
 	y = HeightMapBytes[x][z];
 
-	Normal = HeightMapNormals[x][z];
+	//Normal = HeightMapNormals[x][z];
+	Normal = CalculateNormal(x, z);
+
+	if (Normal.x <= 0 && Normal.y <= 0 && Normal.z <= 0)
+		GVector();
+
+	glTexCoord2d(0, 1);
 	glNormal3f(Normal.x, Normal.y, Normal.z);
-	
 	glVertex3f(x, y, z);
 
 	//Top right
@@ -289,9 +330,14 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	z = Z + StepSize;
 	y = HeightMapBytes[x][z];
 	
-	Normal = HeightMapNormals[x][z];
-	glNormal3f(Normal.x, Normal.y, Normal.z);
+	//Normal = HeightMapNormals[x][z];
+	Normal = CalculateNormal(x, z);
 
+	if (Normal.x <= 0 && Normal.y <= 0 && Normal.z <= 0)
+		GVector();
+
+	glTexCoord2d(1, 1);
+	glNormal3f(Normal.x, Normal.y, Normal.z);
 	glVertex3f(x, y, z);
 
 	//Bottom Right
@@ -299,9 +345,14 @@ void HeightMap::BuildPolygon(const int & X, const int & Z)
 	z = Z;
 	y = HeightMapBytes[x][z];
 
-	Normal = HeightMapNormals[x][z];
+	//Normal = HeightMapNormals[x][z];
+	Normal = CalculateNormal(x, z);
+
+	if (Normal.x <= 0 && Normal.y <= 0 && Normal.z <= 0)
+		GVector();
+
+	glTexCoord2d(1, 0);
 	glNormal3f(Normal.x, Normal.y, Normal.z);
-	
 	glVertex3f(x, y, z);
 
 	
@@ -311,9 +362,12 @@ void HeightMap::Build()
 {
 	//glDisable(GL_LIGHTING);
 	glBegin(GL_QUADS);
-	for (int X = 0; X < MapWidth - StepSize; X += StepSize)
+	glColor3f(1, 0, 1);
+	
+
+	for (int X = StepSize; X < MapWidth - StepSize - 1; X += StepSize)
 	{
-		for (int Y = 0; Y < MapHeight - StepSize; Y += StepSize)
+		for (int Y = StepSize; Y < MapHeight - StepSize - 1; Y += StepSize)
 		{
 			BuildPolygon(X, Y);
 		}
@@ -323,13 +377,23 @@ void HeightMap::Build()
 	//glEnable(GL_LIGHTING);
 }
 
+void HeightMap::BindTextures()
+{
+	glBindTexture(GL_TEXTURE_2D, Texture);
+}
+
 void HeightMap::SetStepSize(int StepSize)
 {
 	this->StepSize = StepSize;
 }
 
-GVector HeightMap::GetVertex(const int& X, const int& Z)
+GVector HeightMap::GetVertex(int X, int Z)
 {
+	X = X >= 0 ? X : 0;
+	X = X < MapWidth ? X : MapWidth - 1;
+	Z = Z >= 0 ? Z : 0;
+	Z = Z < MapHeight ? Z : MapHeight - 1;
+
 	GVector Vertex;
 	Vertex.x = X;
 	Vertex.z = Z;
