@@ -7,6 +7,7 @@ class PhysicsObject : public GObject
 
 	GVector Velocity;
 	GVector Acceleration;
+	float AngularVelocity;
 
 	float Mass;
 
@@ -28,6 +29,10 @@ public:
 	void SetAcceleration(const GVector & NewAcceleration);
 	void AddRelativeAcceleration(const GVector & Amount);
 	void AddRelativeAcceleration(const float & AmountX, const float & AmountY, const float & AmountZ);
+
+	void SetAngularVelocity(const float & AngularVelocity);
+	void AddRelativeAngularVelocity(const float & AngularVelocity);
+	inline float GetAngularVelocity() const { return AngularVelocity; }
 
 	void SetMass(const float & NewMass);
 	inline float GetMass() const { return Mass; }

@@ -5,14 +5,15 @@
 GObject::GObject()
 {
 	Parent = nullptr;
+	UpdateObject = true;
 	ResourceManager::AddGameObject(this);
 }
 
 GObject::GObject(GObject* Parent)
 {
 	this->Parent = Parent;
+	UpdateObject = true;
 	ResourceManager::AddGameObject(this);
-	SetScale(GVector::StaticInit(1));
 }
 
 void GObject::SetParent(GObject* Parent)

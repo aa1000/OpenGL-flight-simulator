@@ -1,57 +1,89 @@
 ﻿#include "PlayerPlane.h"
-#include "RenderingEngine.h"
+#include "GMath.h"
+#include "SphereParticleEmitter.h"
 
 PlayerPlane::PlayerPlane()
 {
 	PlaneSpeed = 5;
+	Step = 0.5;
 
 	Plane = new Mesh(true);
 	Plane->SetRoation(GVector(0, 1, 0));
 	Plane->Load("A6M_ZERO.obj");
 
-	PlanePhysics = new PhysicsObject(Plane, 0.001);
+	PlanePhysics = new PhysicsObject(Plane, 0);
 	PlanePhysics->SetVelocity(GVector(PlaneSpeed, 0, 0));
 	PlanePhysics->SetAngle(90);
 
-	ActiveCamera = RenderingEngine::GetActiveCamera();
+
+}
+
+PlayerPlane::PlayerPlane(const float& PlaneSpeed)
+{
+	this->PlaneSpeed = PlaneSpeed;
+	Step = 0.5;
+
+	Plane = new Mesh(true);
+	Plane->SetRoation(GVector(0, 1, 0));
+	Plane->Load("A6M_ZERO.obj");
+
+	PlanePhysics = new PhysicsObject(Plane, 0);
+	PlanePhysics->SetVelocity(GVector(PlaneSpeed, 0, 0));
+	PlanePhysics->SetAngle(90);
+}
+
+void PlayerPlane::SetBullets(ParticleSystem* Bullets)
+{
+	this ->Bullets = Bullets;
 }
 
 void PlayerPlane::MoveRight()
 {
-	if (ActiveCamera)
-	{
-		ActiveCamera->RotateRight();
-		ActiveCamera->MoveRight();
-	}
+	PlanePhysics->AddRelativeLocation(0, 0, Step);
 }
 
 void PlayerPlane::MoveLeft()
 {
-	if (ActiveCamera)
-	{
-		ActiveCamera->RotateRight();
-		ActiveCamera->MoveLeft();
-	}
+	PlanePhysics->AddRelativeLocation(0, 0, -Step);
+}
+
+void PlayerPlane::MoveUp()
+{
+	PlanePhysics->AddRelativeLocation(0, Step, 0);
+	
+}
+
+void PlayerPlane::MoveDown()
+{
+	PlanePhysics->AddRelativeLocation(0, -Step, 0);
 }
 
 void PlayerPlane::Accelerate()
 {
-	if (ActiveCamera)
-	{
-		//ActiveCamera->MoveForward();
-		
-	}
+	GVector Vel = PlanePhysics->GetVelocity();
 
-	PlanePhysics->AddRelativeAcceleration(PlaneSpeed, 0, 0);
+	Vel.y = Vel.y + Step < PlaneSpeed*2 ? Vel.y + 0.5 : Vel.y;
+
+	//PlanePhysics->SetVelocity(Vel);
+	PlanePhysics->AddRelativeVelocity(Step, 0,0);
 }
 
 void PlayerPlane::Break()
 {
-	if (ActiveCamera)
-	{
-		PlanePhysics->AddRelativeAcceleration(-PlaneSpeed, 0, 0);
+	GVector Vel = PlanePhysics->GetVelocity();
 
-	}
+	if (Vel.x - 0.5 > PlaneSpeed)
+		PlanePhysics->AddRelativeVelocity(-0.5, 0, 0);
+}
+
+void PlayerPlane::Shoot()
+{
+	Bullets->SetNewParticles(1);
+}
+
+void PlayerPlane::StopShooting()
+{
+	Bullets->SetNewParticles(0);
 }
 
 void PlayerPlane::SetPlaneSpeed(const float& PlaneSpeed)

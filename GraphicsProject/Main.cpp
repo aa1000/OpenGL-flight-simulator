@@ -14,6 +14,10 @@
 #include "ParticleSystem.h"
 #include "BoxParticleEmitter.h"
 #include "PlayerPlane.h"
+#include "SkyShpere.h"
+#include "FollowCamera.h"
+#include "ResourceManager.h"
+#include "SphereParticleEmitter.h"
 //#include <md2.h>
 #pragma comment(lib, "FreeImage.lib")
 
@@ -24,14 +28,77 @@ GLfloat DiffuseLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat LightPosition[] = { 0.0f, 10, -5.0f, 1.0f };
 
 //CMD2MODEL model1;
+ResourceManager RM;
 
 Camera camera;
 PlayerPlane* Player;
 
+bool Inputs[10];
+
+void UpdateInputs()
+{
+	if (Inputs[0])
+	{
+		camera.RotateLeft();
+		if (Player)
+			Player->MoveLeft();
+	}
+
+	if (Inputs[1])
+	{
+		camera.RotateRight();
+		if (Player)
+			Player->MoveRight();
+	}
+
+	if (Inputs[2])
+	{
+		camera.MoveForward();
+		if (Player)
+			Player->MoveUp();
+	}
+
+	if(Inputs[3])
+	{
+		camera.MoveBackwards();
+		if (Player)
+			Player->MoveDown();
+	}
+
+	if(Inputs[4])
+	{
+		camera.MoveUp();
+	}
+	if(Inputs[5])
+	{
+		camera.MoveDown();
+	}
+	if (Inputs[6])
+	{
+		if (Player)
+			Player->Accelerate();
+	}
+	if (Inputs[7])
+	{
+		if (Player)
+			Player->Break();
+	}
+	if (Inputs[8])
+	{
+		if (Player)
+			Player->Shoot();
+	}
+	else
+	{
+		if (Player)
+			Player->StopShooting();
+	}
+}
 void RenderTimer(int Dif)
 {
 	const int time = 1000 / __FPS__;
 	glutTimerFunc(time, RenderTimer, time);
+	UpdateInputs();
 	PhysicsEngine::Simulate(time / 1000.0); // to milli secs
 	glutPostRedisplay();
 }
@@ -56,53 +123,64 @@ void Resize(int width, int height)
 
 void KeyboradFunc(unsigned char k, int x, int y) // uses ASCII
 {
-	/*if (k == 'a')
-		ActiveObj->Rot.ZAngle += 1;
-	if (k == 'd')
-		ActiveObj->Rot.ZAngle -= 1;
 	if (k == 'w')
-		ActiveObj->Rot.YAngle += 1;
+		Inputs[6] = true;
 	if (k == 's')
-		ActiveObj->Rot.YAngle -= 1;*/
+		Inputs[7] = true;
+	if (k == ' ')
+		Inputs[8] = true;
+}
+
+void KeyboradUpFunc(unsigned char k, int x, int y) // uses ASCII
+{
+	if (k == 'w')
+		Inputs[6] = false;
+	if (k == 's')
+		Inputs[7] = false;
+	if (k == ' ')
+		Inputs[8] = false;
 }
 
 void SpecialFunc(int k, int x, int y) // uss UTF
 {
 	if (k == GLUT_KEY_LEFT)
-	{
-		camera.RotateLeft();
-		if (Player)
-			Player->MoveLeft();
-	}
+		Inputs[0] = true;
+
 	if (k == GLUT_KEY_RIGHT)
-	{
-		camera.RotateRight();
-		if (Player)
-			Player->MoveRight();
-	}
+		Inputs[1] = true;
+
 	if (k == GLUT_KEY_UP)
-	{
-		camera.MoveForward();
-		if (Player)
-			Player->Accelerate();
-	}
+		Inputs[2] = true;
+
 	if (k == GLUT_KEY_DOWN)
-	{
-		camera.MoveBackwards();
-		if (Player)
-			Player->Break();
-	}
+		Inputs[3] = true;
+	
 	if (k == GLUT_KEY_PAGE_UP)
-	{
-		camera.MoveUp();
+		Inputs[4] = true;
 
-	}
 	if (k == GLUT_KEY_PAGE_DOWN)
-	{
-		camera.MoveDown();
-	}
+		Inputs[5] = true;
+}
 
+void SpecialUpFunc(int k, int x, int y) // uss UTF
+{
+	if (k == GLUT_KEY_LEFT)
+		Inputs[0] = false;
 
+	if (k == GLUT_KEY_RIGHT)
+		Inputs[1] = false;
+
+	if (k == GLUT_KEY_UP)
+		Inputs[2] = false;
+
+	if (k == GLUT_KEY_DOWN)
+		Inputs[3] = false;
+
+	if (k == GLUT_KEY_PAGE_UP)
+		Inputs[4] = false;
+
+	if (k == GLUT_KEY_PAGE_DOWN)
+		Inputs[5] = false;
 }
 
 void Draw()
@@ -134,7 +212,7 @@ void InitFog()
 	glFogf(GL_FOG_DENSITY, 0.45f);
 	glHint(GL_FOG_HINT, GL_NICEST);
 	glFogf(GL_FOG_START, 1.0f);
-	glFogf(GL_FOG_END, __SCENE_DEPTH__ / 6);
+	glFogf(GL_FOG_END, __SCENE_DEPTH__ / 2);
 
 	glEnable(GL_FOG);
 }
@@ -144,14 +222,16 @@ void Init()
 {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_RGBA | GLUT_DOUBLE);
 
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(__WINDOW_WIDTH__, __WINDOW_HEIGHT__);
 
 	glutCreateWindow(__GAME_NAME__);
 	glutDisplayFunc(Draw);
 	glutReshapeFunc(Resize);
 	glutKeyboardFunc(KeyboradFunc);
+	glutKeyboardUpFunc(KeyboradUpFunc);
 	glutSpecialFunc(SpecialFunc);
+	glutSpecialUpFunc(SpecialUpFunc);
 
 	glutTimerFunc(1000 / __FPS__, RenderTimer, 1000 / __FPS__);
 	
@@ -172,45 +252,62 @@ void Init()
 	glEnable(GL_POLYGON_SMOOTH);
 
 	InitLighting();
-	//InitFog();
+	InitFog();
 }
 
 void LoadObjects()
 {
 
-
+	
 	HeightMap* HM = new HeightMap(true); 
 	HM->SetTexture(Drawing::LoadTexture("SnowMap.png"));
 	//HM->SetStepSize(1);
 	HM->Load("map2.jpg");
 	//HM->SetScale(1);
-	//HM->Location.y = -100;
-
-	//Mesh* Apple = new Mesh(true);
-	//Apple->SetAngle(90);
-	//Apple->SetRoation(GVector(0, 1, 0));
-	////Apple->SetScale(.25);
-	//Apple->Load("A6M_ZERO.obj");
-
-	//PhysicsObject* Phy = new PhysicsObject(&camera, 0.001);
-	//Phy->AddRelativeLocation(-10, 4, 0);
-	//Phy->SetVelocity(GVector(5, 0, 0));
-
+	HM->AddRelativeLocation(0, -100, -200);
+	
 	Player = new PlayerPlane();
 
-	ParticleSystem* PS = new ParticleSystem;
-	PS->SetMass(0.01);
-	PS->AddTexture("snowflake0.png");
-	PS->AddTexture("snowflake1.png");
-	PS->AddTexture("snowflake2.png");
+	SkyShpere* SS = new SkyShpere(Player->GetPlaneMesh(), 1000);
+	SS->Load("kiara.jpg");
 
+	//ParticleSystem* PS = new ParticleSystem();
+	//PS->SetMass(0.01);
+	//PS->AddTexture("snowflake0.png");
+	//PS->AddTexture("snowflake1.png");
+	//PS->AddTexture("snowflake2.png");
+	//GVector Acc(0, -PhysicsEngine::GetGravity(), 0);
+	//PS->SetAcceleration(Acc);
 
-	BoxParticleEmitter* PE = new BoxParticleEmitter((RenderedObject*)PS, GVector(0, 50, 0), GVector(500, 50, 500));
-	PE->SetLifeTime(10, 20);
-	PE->SetSpeed(1, 1);
-	PE->SetSize(8, 15);
-	PS->SetEmitter(PE);
-	//PS->InitPaticles();
+	//BoxParticleEmitter* PE = new BoxParticleEmitter((RenderedObject*)PS, GVector(0, 50, -200), GVector(500, 50, 500));
+	//PE->SetLifeTime(10, 20);
+	//PE->SetSpeed(1, 1);
+	//PE->SetSize(5, 15);
+	//PE->SetAngularVelocity(10, 30);
+	//PE->SetFadingOverTime(0, 0);
+	//PS->SetEmitter(PE);
+
+	ParticleSystem *Bullets = new ParticleSystem(Player->GetPlaneMesh(), 100);
+	Bullets->SetNewParticles(1);
+	Bullets->SetMass(0);
+	Bullets->AddTexture("bullet.jpg");
+	
+	Bullets->SetAcceleration(GVector(10, 0, 0));
+
+	SphereParticleEmitter* SPE = new SphereParticleEmitter(Player->GetPlaneMesh());
+	SPE->SetLifeTime(3, 3);
+	SPE->SetStartVelocity(GVector(25, 0, 0), GVector(25, 0, 0));
+	SPE->SetSize(1, 1);
+	SPE->SetAngularVelocity(0, 0);
+	SPE->SetAngle(-45, -45);
+	SPE->SetParticleRotation(GVector(1, 0, 0), GVector(1, 0, 0));
+	SPE->SetOffset(GVector(-5, 0, 0));
+	Bullets->SetEmitter(SPE);
+
+	Player->SetBullets(Bullets);
+
+	FollowCamera* cam = new FollowCamera(Player);
+	RenderingEngine::SetActiveCamera(cam);
 }
 
 void Destruct()
@@ -226,7 +323,7 @@ int main(int argc, char *argv[])
 	Init();
 	LoadObjects();
 	
-	RenderingEngine::SetActiveCamera(&camera);
+	//RenderingEngine::SetActiveCamera(&camera);
 
 	glutMainLoop();
 

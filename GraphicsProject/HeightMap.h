@@ -12,11 +12,6 @@ class HeightMap : public RenderedObject
 	GVector  **HeightMapNormals;
 
 	GVector CalculatePlaneNormal(const int & X, const int & Z);
-	void CalculateNormals();
-	void CalculateEdgeNormals();
-	void Calculate3EdgeNormals();
-	void Calculate4EdgeNormals();
-	GVector CalculateEdgeNormal(const int & X, const int & Z);
 	GVector CalculateNormal(const int & X, const int & Z);
 	void BuildPolygon(const int & X, const int & Z);
 	

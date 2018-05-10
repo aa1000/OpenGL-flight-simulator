@@ -11,14 +11,14 @@ float PhysicsEngine::Gravity = 1;
 
 void PhysicsEngine::AddPhysicsObject(PhysicsObject* PhysicsObjectComponent)
 {
-	PhysicsEngine::PhysicsObjects.push_back(PhysicsObjectComponent);
+	PhysicsObjects.push_back(PhysicsObjectComponent);
 }
 
 void PhysicsEngine::Simulate(float DeltaTime)
 {
 	for (int i = 0; i < PhysicsObjects.size(); i++)
-		if(PhysicsEngine::PhysicsObjects[i])
-			PhysicsEngine::PhysicsObjects[i]->Update(DeltaTime);
+		if(PhysicsObjects[i] && PhysicsObjects[i]->UpdateObject)
+			PhysicsObjects[i]->Update(DeltaTime);
 }
 
 float PhysicsEngine::GetGravity()

@@ -99,7 +99,7 @@ void ParticleSystem::EmitParticle(Particle& p)
 
 	p.Velocity.init(0);
 
-	if (Emitter != nullptr)
+	if (Emitter != NULL)
 		Emitter->EmitParticle(p);
 }
 
@@ -107,6 +107,11 @@ void ParticleSystem::EmitParticle(Particle& p)
 void ParticleSystem::SetCamera(Camera* camera)
 {
 	this->camera = camera;
+}
+
+void ParticleSystem::SetNewParticles(const int& NewParticles)
+{
+	this->NewParticles = NewParticles;
 }
 
 void ParticleSystem::SetEmitter(ParticleEmitter* Emitter)
@@ -129,7 +134,7 @@ void ParticleSystem::Update(const float & DeltaTime)
 
 		Particle& P = ParticlesContainer[i];
 
-		if (P.LifeTime < 0.0f && NewCounter < NewParticles)
+		if (P.Age < 0.0f && NewCounter < NewParticles)
 		{
 			EmitParticle(P);
 			NewCounter++;
@@ -137,11 +142,15 @@ void ParticleSystem::Update(const float & DeltaTime)
 		else
 		{
 			// Decrease life
-			P.LifeTime -= DeltaTime;
+			P.Age -= DeltaTime;
 
+		//	P.Scale = ( ((1 - P.SizeOverTime) / P.LifeTime) * P.Age + P.SizeOverTime ) * P.Size;
+			P.A = ((1 - P.FadingOverTime)/P.LifeTime) * P.Age + P.FadingOverTime;
 			// Simulate simple physics
-			P.Velocity += GVector(0.0f, GetMass() * -PhysicsEngine::GetGravity(), 0.0f) * DeltaTime;
+			P.Velocity += GetAcceleration() * DeltaTime;
 			P.Location += P.Velocity * DeltaTime;
+			//P.Location += GMath::RandNumRange<GVector>(P.flirckering * -1, P.flirckering);
+			P.Angle += P.AngularVelocity * DeltaTime;
 
 		}
 	}
@@ -149,20 +158,24 @@ void ParticleSystem::Update(const float & DeltaTime)
 
 void ParticleSystem::Render()
 {
+
 	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
 	for (int i = 0; i < MaxParticles; i++)
 	{
-		if (ParticlesContainer[i].LifeTime > 0)
+		Particle& P = ParticlesContainer[i];
+		if (P.Age > 0)
 		{
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 			glEnable(GL_BLEND);
-			glColor4f(1, 1, 1, 1);
+			
 			glPushMatrix();
-			glScalef(ParticlesContainer[i].Size, ParticlesContainer[i].Size, ParticlesContainer[i].Size);
-			glTranslatef(ParticlesContainer[i].Location.x, ParticlesContainer[i].Location.y, ParticlesContainer[i].Location.z);
-		//	glRotatef(flakes[i].rotAng, flakes[i].xr, flakes[i].yr, flakes[i].zr);
+			glColor4f(P.R, P.G, P.B, P.A);
+			glScalef(P.Scale, P.Scale, P.Scale);
+			glTranslatef(P.Location.x, P.Location.y, P.Location.z);
+			glRotatef(P.Angle, P.Rotation.x, P.Rotation.y, P.Rotation.z);
 
-			glBindTexture(GL_TEXTURE_2D, ParticlesContainer[i].Texture);
+			glBindTexture(GL_TEXTURE_2D, P.Texture);
 			glBegin(GL_QUADS);
 
 			glTexCoord2d(0, 0);
@@ -180,4 +193,5 @@ void ParticleSystem::Render()
 		}
 	}
 	glEnable(GL_LIGHTING);
+	//glEnable(GL_FOG);
 }

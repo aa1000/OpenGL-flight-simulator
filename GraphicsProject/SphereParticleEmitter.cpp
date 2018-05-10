@@ -14,6 +14,12 @@ SphereParticleEmitter::SphereParticleEmitter(GObject* Parent)
 	Raduis = 0;
 }
 
+SphereParticleEmitter::SphereParticleEmitter(GObject* Parent, const float& Raduis)
+	:ParticleEmitter(Parent)
+{
+	this->Raduis = Raduis;
+}
+
 void SphereParticleEmitter::SetRaduis(const float& Raduis)
 {
 	this->Raduis = Raduis;

@@ -17,10 +17,11 @@ void RenderingEngine::AddRenderedObject(RenderedObject* RenderedObject)
 void RenderingEngine::Render()
 {
 
-	ActiveCamera->RenderLookAt();
+	if(ActiveCamera)
+		ActiveCamera->RenderLookAt();
 
 	for (int i = 0; i < RenderedObjects.size(); i++)
-		if(RenderedObjects[i])
+		if(RenderedObjects[i] && RenderedObjects[i]->UpdateObject)
 			RenderedObjects[i]->Render();
 
 }

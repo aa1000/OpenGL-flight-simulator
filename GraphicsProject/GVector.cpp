@@ -65,9 +65,9 @@ float GVector::GetAngle(const GVector& V1, const GVector& V2)
 
 void GVector::AddFloatAmount(const float& AmountX, const float& AmountY, const float& AmountZ)
 {
-	this->x = AmountX;
-	this->y = AmountY;
-	this->z = AmountZ;
+	this->x += AmountX;
+	this->y += AmountY;
+	this->z += AmountZ;
 }
 
 GVector& GVector::operator=(const GVector& other)

@@ -45,6 +45,7 @@ class GObject
 
 public:
 
+	bool UpdateObject;
 	
 
 	GObject();

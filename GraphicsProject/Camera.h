@@ -2,9 +2,14 @@
 #include "GVector.h"
 #include "GObject.h"
 
+
 class Camera : public GObject
 {
 public:
+
+	//PlayerPlane* Plane;
+	Camera();
+	GVector Offset;
 	GVector CameraLocation;
 	GVector CameraRoation;
 	GVector CameraHeading;
@@ -13,7 +18,8 @@ public:
 	float CameraRotationSen;
 	float CameraHeadingSen;
 
-	Camera();
+	void RotateUp();
+	void RotateDown();
 	void RotateLeft();
 	void RotateRight();
 
@@ -25,6 +31,6 @@ public:
 	void MoveForward();
 	void MoveBackwards();
 
-	void RenderLookAt();
+	virtual void RenderLookAt();
 	
 };

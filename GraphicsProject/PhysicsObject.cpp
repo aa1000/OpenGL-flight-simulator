@@ -7,6 +7,7 @@ PhysicsObject::PhysicsObject()
 {
 	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = 1;
+	this->AngularVelocity = 0;
 }
 
 PhysicsObject::PhysicsObject(const float& Mass)
@@ -14,6 +15,7 @@ PhysicsObject::PhysicsObject(const float& Mass)
 {
 	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = Mass;
+	this->AngularVelocity = 0;
 }
 
 PhysicsObject::PhysicsObject(GObject* Parent)
@@ -21,11 +23,13 @@ PhysicsObject::PhysicsObject(GObject* Parent)
 {
 	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = 1;
+	this->AngularVelocity = 0;
 
 	if (Parent)
 	{
 		this->SetLocation(Parent->GetLocation());
 		this->SetRoation(Parent->GetRoation());
+		this->SetAngle(Parent->GetAngle());
 	}
 }
 
@@ -34,11 +38,13 @@ PhysicsObject::PhysicsObject(GObject* Parent, const float& Mass)
 {
 	PhysicsEngine::AddPhysicsObject(this);
 	this->Mass = Mass;
+	this->AngularVelocity = 0;
 
 	if (Parent)
 	{
 		this->SetLocation(Parent->GetLocation());
 		this->SetRoation(Parent->GetRoation());
+		this->SetAngle(Parent->GetAngle());
 	}
 }
 
@@ -73,6 +79,16 @@ void PhysicsObject::AddRelativeAcceleration(const float& AmountX, const float& A
 	this->Acceleration.AddFloatAmount(AmountX, AmountY, AmountZ);
 }
 
+void PhysicsObject::SetAngularVelocity(const float& AngularVelocity)
+{
+	this->AngularVelocity = AngularVelocity;
+}
+
+void PhysicsObject::AddRelativeAngularVelocity(const float& AngularVelocity)
+{
+	this->AngularVelocity += AngularVelocity;
+}
+
 void PhysicsObject::SetMass(const float& NewMass)
 {
 	this->Mass = Mass;
@@ -96,5 +112,6 @@ void PhysicsObject::Integrate(const float & DeltaTime)
 	Acceleration.y -= PhysicsEngine::GetGravity() * Mass;
 	AddRelativeVelocity(Acceleration * DeltaTime);
 	AddRelativeLocation(Velocity * DeltaTime);
+	SetAngle(GetAngle() + AngularVelocity * DeltaTime);
 }
 

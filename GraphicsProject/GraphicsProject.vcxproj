@@ -145,6 +145,7 @@
     <ClCompile Include="BoxParticleEmitter.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawing.cpp" />
+    <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="GMath.cpp" />
     <ClCompile Include="GObject.cpp" />
     <ClCompile Include="GShader.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SkyShpere.cpp" />
     <ClCompile Include="SphereParticleEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +183,11 @@
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SkyShpere.h" />
     <ClInclude Include="SphereParticleEmitter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FollowCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

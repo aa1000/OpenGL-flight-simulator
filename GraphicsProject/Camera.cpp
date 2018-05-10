@@ -2,16 +2,33 @@
 #include "GL\freeglut.h"
 #include <math.h>
 
+
 Camera::Camera()
+	:GObject()
 {
-	//CameraLocation = GVector(0, 10, 20);
 
 	CameraLocationSen = 1;
 	CameraRotationSen = 0.1;
 	CameraHeadingSen = 0.5;
 
-	//CameraRoation.y = 0.4;
-	//CameraHeading.y = sin(CameraRoation.y);
+	CameraRoation.x = 1.4;
+	CameraHeading.x = 1;
+	CameraHeading.z = 0.15;
+
+}
+
+void Camera::RotateUp()
+{
+	CameraRoation.y += CameraRotationSen;
+	CameraHeading.y = sin(CameraRoation.y);
+	CameraHeading.z = -cos(CameraRoation.y);
+}
+
+void Camera::RotateDown()
+{
+	CameraRoation.y -= CameraRotationSen;
+	CameraHeading.y = sin(CameraRoation.y);
+	CameraHeading.z = -cos(CameraRoation.y);
 }
 
 void Camera::RotateLeft()
@@ -31,46 +48,39 @@ void Camera::RotateRight()
 void Camera::MoveUp()
 {
 	CameraLocation.y += CameraLocationSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::MoveDown()
 {
 	CameraLocation.y -= CameraLocationSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::MoveRight()
 {
 	CameraLocation.z -= CameraLocationSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::MoveLeft()
 {
 	CameraLocation.z -= CameraLocationSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::MoveForward()
 {
 	CameraLocation.x += CameraHeading.x * CameraHeadingSen;
 	CameraLocation.z += CameraHeading.z * CameraHeadingSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::MoveBackwards()
 {
 	CameraLocation.x -= CameraHeading.x * CameraHeadingSen;
 	CameraLocation.z -= CameraHeading.z * CameraHeadingSen;
-	SetLocation(CameraLocation);
 }
 
 void Camera::RenderLookAt()
 {
-	CameraLocation = GetLocation();
 	glLoadIdentity();
 	gluLookAt(CameraLocation.x, CameraLocation.y, CameraLocation.z,
-		CameraLocation.x + CameraHeading.x, CameraLocation.y,
+		CameraLocation.x + CameraHeading.x, CameraLocation.y + CameraHeading.y,
 		CameraLocation.z + CameraHeading.z, 0, 1, 0);
 }

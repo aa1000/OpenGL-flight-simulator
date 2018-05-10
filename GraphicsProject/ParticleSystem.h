@@ -16,20 +16,41 @@ class ParticleEmitter;
 struct Particle
 {
 	GVector Location;
+	GVector Rotation;
 	GVector Velocity;
 
+	float R, G, B, A;
+	
+	float AngularVelocity;
+
+	float FadingOverTime;
+	float SizeOverTime;
+
+	float Angle;
+	GVector flirckering;
 
 	GLuint Texture;
 
-	float Size, ZAngle;
+	float Size;
+	float Scale;
 	float LifeTime;
+	float Age;
 
 
 public:
 	Particle()
 	{
+		R = G = B = A = 1;
 		Size = 1;
-		ZAngle = 0;
+		Angle = 0;
+		FadingOverTime = 1;
+		SizeOverTime = 1;
+	}
+	void SetColour(const GVector & Colour)
+	{
+		this->R = Colour.x;
+		this->G = Colour.y;
+		this->B = Colour.z;
 	}
 
 
@@ -64,6 +85,9 @@ public:
 	inline int GetMaxParticles() const { return MaxParticles; }
 
 	void SetCamera(Camera* camera);
+
+	void SetNewParticles(const int & NewParticles);
+	inline int GetNewParticles() const { return NewParticles; }
 
 	void SetEmitter(ParticleEmitter* Emitter);
 	inline ParticleEmitter* GetEmitter() { return Emitter; }

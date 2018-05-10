@@ -81,6 +81,12 @@
     <ClCompile Include="PlayerPlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkyShpere.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCamera.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GVector.h">
@@ -140,5 +146,13 @@
     <ClInclude Include="PlayerPlane.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SkyShpere.h">
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FollowCamera.h">
+      <Filter>Source Files\Rendering</Filter>
+    </None>
   </ItemGroup>
 </Project>
