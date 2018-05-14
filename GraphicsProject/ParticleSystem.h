@@ -36,6 +36,7 @@ struct Particle
 	float LifeTime;
 	float Age;
 
+	float CameraDistance;
 
 public:
 	Particle()
@@ -45,12 +46,19 @@ public:
 		Angle = 0;
 		FadingOverTime = 1;
 		SizeOverTime = 1;
+		CameraDistance = -1;
 	}
 	void SetColour(const GVector & Colour)
 	{
 		this->R = Colour.x;
 		this->G = Colour.y;
 		this->B = Colour.z;
+	}
+
+	bool operator<(Particle& other) 
+	{
+		// Sort in reverse order far particles drawn first
+		return this->CameraDistance > other.CameraDistance;
 	}
 
 
@@ -64,10 +72,10 @@ class ParticleSystem : public RenderedObject, public PhysicsObject
 	int MaxParticles;
 	int NewParticles;
 
+	bool SortToCamera;
 	Particle* ParticlesContainer;
 
 	ParticleEmitter* Emitter;
-	Camera* camera;
 
 protected:
 
@@ -84,7 +92,8 @@ public:
 	void SetMaxParticles(const int & NewMax);
 	inline int GetMaxParticles() const { return MaxParticles; }
 
-	void SetCamera(Camera* camera);
+	void SetSortToCamera(const bool & bSortToCamera);
+	inline bool GetSortToCamera() const { return SortToCamera; }
 
 	void SetNewParticles(const int & NewParticles);
 	inline int GetNewParticles() const { return NewParticles; }

@@ -209,10 +209,10 @@ void InitFog()
 
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 	glFogfv(GL_FOG_COLOR, FogColor);
-	glFogf(GL_FOG_DENSITY, 0.45f);
+	glFogf(GL_FOG_DENSITY, 0.25f);
 	glHint(GL_FOG_HINT, GL_NICEST);
 	glFogf(GL_FOG_START, 1.0f);
-	glFogf(GL_FOG_END, __SCENE_DEPTH__ / 2);
+	glFogf(GL_FOG_END, __SCENE_DEPTH__ );
 
 	glEnable(GL_FOG);
 }
@@ -268,24 +268,24 @@ void LoadObjects()
 	
 	Player = new PlayerPlane();
 
-	SkyShpere* SS = new SkyShpere(Player->GetPlaneMesh(), 1000);
+	SkyShpere* SS = new SkyShpere(Player->GetPlaneMesh(), 1500);
 	SS->Load("kiara.jpg");
 
-	//ParticleSystem* PS = new ParticleSystem();
-	//PS->SetMass(0.01);
-	//PS->AddTexture("snowflake0.png");
-	//PS->AddTexture("snowflake1.png");
-	//PS->AddTexture("snowflake2.png");
-	//GVector Acc(0, -PhysicsEngine::GetGravity(), 0);
-	//PS->SetAcceleration(Acc);
+	ParticleSystem* PS = new ParticleSystem();
+	PS->SetMass(0.01);
+	PS->AddTexture("snowflake0.png");
+	PS->AddTexture("snowflake1.png");
+	PS->AddTexture("snowflake2.png");
+	GVector Acc(0, -PhysicsEngine::GetGravity(), 0);
+	PS->SetAcceleration(Acc);
 
-	//BoxParticleEmitter* PE = new BoxParticleEmitter((RenderedObject*)PS, GVector(0, 50, -200), GVector(500, 50, 500));
-	//PE->SetLifeTime(10, 20);
-	//PE->SetSpeed(1, 1);
-	//PE->SetSize(5, 15);
-	//PE->SetAngularVelocity(10, 30);
-	//PE->SetFadingOverTime(0, 0);
-	//PS->SetEmitter(PE);
+	BoxParticleEmitter* PE = new BoxParticleEmitter((RenderedObject*)PS, GVector(0, 50, -200), GVector(500, 50, 500));
+	PE->SetLifeTime(10, 20);
+	PE->SetSpeed(1, 1);
+	PE->SetSize(5, 15);
+	PE->SetAngularVelocity(10, 30);
+	PE->SetFadingOverTime(0, 0);
+	PS->SetEmitter(PE);
 
 	ParticleSystem *Bullets = new ParticleSystem(Player->GetPlaneMesh(), 100);
 	Bullets->SetNewParticles(1);
@@ -301,10 +301,29 @@ void LoadObjects()
 	SPE->SetAngularVelocity(0, 0);
 	SPE->SetAngle(-45, -45);
 	SPE->SetParticleRotation(GVector(1, 0, 0), GVector(1, 0, 0));
-	SPE->SetOffset(GVector(-5, 0, 0));
+	SPE->SetOffset(GVector(3, -1, 0));
 	Bullets->SetEmitter(SPE);
 
 	Player->SetBullets(Bullets);
+
+	ParticleSystem *Smoke = new ParticleSystem(Player->GetPlaneMesh(), 300);
+	Smoke->SetSortToCamera(true);
+	Smoke->SetNewParticles(1);
+	Smoke->SetMass(0);
+	Smoke->AddTexture("smoke01.png");
+	Smoke->AddTexture("smoke02.png");
+
+
+	SphereParticleEmitter* SmokePE = new SphereParticleEmitter(Player->GetPlaneMesh(), 1);
+	SmokePE->SetFadingOverTime(0.8, 0.8);
+	SmokePE->SetLifeTime(3.5, 4.5);
+	SmokePE->SetSize(1, 1);
+	SmokePE->SetAngularVelocity(0, 0);
+	SmokePE->SetAngle(45, 45);
+	SmokePE->SetParticleRotation(GVector(0, 1, 0), GVector(0, 1, 0));
+	SmokePE->SetOffset(GVector(0, 0, 7));
+	SmokePE->SetColour(GVector(0.2, 0.2, 0.2), GVector(0.7, 0.7, 0.7));
+	Smoke->SetEmitter(SmokePE);
 
 	FollowCamera* cam = new FollowCamera(Player);
 	RenderingEngine::SetActiveCamera(cam);

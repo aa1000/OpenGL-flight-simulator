@@ -19,35 +19,35 @@
 ParticleSystem::ParticleSystem()
 	:RenderedObject(), PhysicsObject()
 {
+	SortToCamera = false;
 	MaxParticles = 10000;
 	NewParticles = MaxParticles * 0.002;
-	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
+	SortToCamera = false;
 	NewParticles = MaxParticles * 0.002;
-	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(int MaxParticles)
 	: RenderedObject(), PhysicsObject()
 {
+	SortToCamera = false;
 	this->MaxParticles = MaxParticles;
 	NewParticles = MaxParticles * 0.002;
-	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
 ParticleSystem::ParticleSystem(GObject* Parent, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
+	SortToCamera = false;
 	this->MaxParticles = MaxParticles;
 	NewParticles = MaxParticles * 0.002;
-	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
@@ -55,10 +55,10 @@ ParticleSystem::ParticleSystem(GObject* Parent, int MaxParticles)
 ParticleSystem::ParticleSystem(GObject* Parent, ParticleEmitter* Emitter, int MaxParticles)
 	:RenderedObject(Parent), PhysicsObject(Parent)
 {
+	SortToCamera = false;
 	this->MaxParticles = MaxParticles;
 	this->Emitter = Emitter;
 	NewParticles = MaxParticles * 0.002;
-	this->camera = RenderingEngine::GetActiveCamera();
 	ParticlesContainer = new Particle[MaxParticles];
 }
 
@@ -75,6 +75,11 @@ void ParticleSystem::SetMaxParticles(const int& NewMax)
 {
 	this->MaxParticles = NewMax;
 	delete[] ParticlesContainer;
+}
+
+void ParticleSystem::SetSortToCamera(const bool& bSortToCamera)
+{
+	this->SortToCamera = bSortToCamera;
 }
 
 void ParticleSystem::InitPaticles()
@@ -101,12 +106,6 @@ void ParticleSystem::EmitParticle(Particle& p)
 
 	if (Emitter != NULL)
 		Emitter->EmitParticle(p);
-}
-
-
-void ParticleSystem::SetCamera(Camera* camera)
-{
-	this->camera = camera;
 }
 
 void ParticleSystem::SetNewParticles(const int& NewParticles)
@@ -149,11 +148,15 @@ void ParticleSystem::Update(const float & DeltaTime)
 			// Simulate simple physics
 			P.Velocity += GetAcceleration() * DeltaTime;
 			P.Location += P.Velocity * DeltaTime;
-			//P.Location += GMath::RandNumRange<GVector>(P.flirckering * -1, P.flirckering);
 			P.Angle += P.AngularVelocity * DeltaTime;
+
+			P.CameraDistance = (P.Location - RenderingEngine::GetActiveCamera()->CameraLocation).Length();
 
 		}
 	}
+
+	if(SortToCamera)
+		std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
 }
 
 void ParticleSystem::Render()
@@ -193,5 +196,5 @@ void ParticleSystem::Render()
 		}
 	}
 	glEnable(GL_LIGHTING);
-	//glEnable(GL_FOG);
+	glEnable(GL_FOG);
 }
